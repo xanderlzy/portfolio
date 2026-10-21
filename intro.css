@@ -1,0 +1,42 @@
+/* ---------- Intro: macOS desktop -> Premiere splash -> workspace assembles ---------- */
+#boot{position:fixed;inset:0;z-index:100;background:#0a0a12;overflow:hidden;transition:opacity .6s;font-family:-apple-system,"SF Pro Text","Helvetica Neue",Arial,sans-serif}
+#boot.out{opacity:0;pointer-events:none}
+.mac{position:absolute;inset:0;background:radial-gradient(110% 90% at 15% 5%,#7a4de0 0,transparent 55%),radial-gradient(100% 80% at 90% 90%,#ff8a55 0,transparent 55%),linear-gradient(160deg,#1c2b6b,#3b1d63 50%,#a1386b)}
+.mbar{height:24px;display:flex;gap:18px;align-items:center;padding:0 14px;background:rgba(20,20,30,.35);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);color:#fff;font-size:13px}
+.mbar span:last-child{margin-left:auto}
+.dock{position:absolute;left:50%;bottom:12px;transform:translateX(-50%);display:flex;gap:10px;padding:8px 10px;border-radius:20px;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.25);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px)}
+.dk{width:52px;height:52px;border-radius:12px;display:grid;place-items:center;font:700 21px/1 -apple-system,"Helvetica Neue",sans-serif;position:relative;transition:transform .2s;box-shadow:0 2px 6px #0005}
+.dk.run:after{content:"";position:absolute;bottom:-7px;left:50%;width:4px;height:4px;margin-left:-2px;border-radius:50%;background:#eee}
+.dk.hv{transform:scale(1.35) translateY(-6px)}
+.dk.bn{animation:bn 1.5s ease-in-out}
+@keyframes bn{0%,24%,54%,84%,100%{transform:translateY(0)}12%,42%{transform:translateY(-30px)}72%{transform:translateY(-22px)}}
+.adobe{background:#00005b;border:1px solid #6b6bd6}
+#cur{position:absolute;left:0;top:0;z-index:5;filter:drop-shadow(0 2px 3px #0006);pointer-events:none}
+.splash{position:absolute;left:50%;top:50%;width:min(640px,92vw);aspect-ratio:16/10;transform:translate(-50%,-50%) scale(.96);opacity:0;transition:opacity .35s,transform .35s;border-radius:6px;overflow:hidden;background:radial-gradient(90% 90% at 85% 0,#3b2a8f 0,#13103a 55%,#07061a);box-shadow:0 30px 80px #000a;color:#fff;padding:7%;display:flex;flex-direction:column}
+.splash.on{opacity:1;transform:translate(-50%,-50%) scale(1)}
+.pr{width:56px;height:56px;border-radius:10px;background:#00005b;border:1px solid #9999ff;color:#9999ff;font:700 26px/54px "Helvetica Neue",Arial,sans-serif;text-align:center}
+.splash h2{margin:16px 0 2px;font:300 28px "Helvetica Neue",Arial,sans-serif}
+.splash small{color:#aab;font-size:12px}
+.credit{position:absolute;right:7%;top:7%;text-align:right;font-size:10px;line-height:1.5;color:#9a9ac0}
+.sst{margin-top:auto;font-size:11px;color:#b9b9d8;min-height:16px}
+.sbar{height:2px;background:#ffffff22;margin-top:8px}.sbar i{display:block;height:100%;width:0;background:#9999ff;transition:width .3s}
+#skip{position:fixed;right:18px;bottom:18px;z-index:110;background:#0007;color:#fff;border:1px solid #fff4;border-radius:14px;padding:5px 14px;font:12px -apple-system,"Helvetica Neue",sans-serif;cursor:pointer}
+#skip:hover{background:#000b}
+/* workspace states while booting */
+.app.booting{pointer-events:none}
+.app.booting>*{opacity:0;transition:opacity .5s}
+.app.booting>.rv{opacity:1}
+.app.booting .ph,.app.booting .rm{opacity:0}
+.app:not(.booting) .ph,.app:not(.booting) .rm{transition:opacity .4s}
+.app.booting:not(.live) .frame{opacity:0}
+.frame{transition:opacity .7s}
+.tree>div{transition:opacity .25s}.tree>div.hid{opacity:0}
+.tracks .clip{transition:clip-path .6s ease-out}
+.tracks .clip.hid{clip-path:inset(0 100% 0 0)}
+#imp{position:fixed;left:14px;bottom:calc(38% + 14px);width:calc(24% - 28px);min-width:210px;z-index:20;background:#2d2d2d;border:1px solid #444;border-radius:6px;padding:9px 11px;font-size:11px;opacity:0;transform:translateY(8px);transition:.3s;box-shadow:0 8px 24px #0008;pointer-events:none}
+#imp.on{opacity:1;transform:none}
+#imp span{color:var(--dim)}
+#imp .bar{height:3px;background:#444;margin-top:7px}#imp .bar i{display:block;height:100%;width:0;background:var(--blue);transition:width .15s}
+#hint{position:fixed;left:50%;bottom:16px;transform:translate(-50%,8px);z-index:20;background:#000c;color:#eee;padding:8px 16px;border-radius:16px;font-size:12px;opacity:0;transition:.4s;pointer-events:none;white-space:nowrap}
+#hint.on{opacity:1;transform:translate(-50%,0)}
+@media(prefers-reduced-motion:reduce){#boot,#skip{display:none}}
