@@ -20,7 +20,7 @@
 .credit{position:absolute;right:7%;top:7%;text-align:right;font-size:10px;line-height:1.5;color:#9a9ac0}
 .sst{margin-top:auto;font-size:11px;color:#b9b9d8;min-height:16px}
 .sbar{height:2px;background:#ffffff22;margin-top:8px}.sbar i{display:block;height:100%;width:0;background:#9999ff;transition:width .3s}
-#skip{position:fixed;right:18px;bottom:18px;z-index:110;background:#0007;color:#fff;border:1px solid #fff4;border-radius:14px;padding:5px 14px;font:12px -apple-system,"Helvetica Neue",sans-serif;cursor:pointer}
+#skip{position:fixed;right:18px;bottom:18px;z-index:110;background:#000b;color:#fff;border:1px solid #fff6;border-radius:14px;padding:5px 14px;font:12px -apple-system,"Helvetica Neue",sans-serif;cursor:pointer}
 #skip:hover{background:#000b}
 /* workspace states while booting */
 .app.booting{pointer-events:none}

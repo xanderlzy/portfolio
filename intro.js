@@ -9,14 +9,14 @@
 
   // Clicking the brand name in the menu bar replays the intro.
   var brand = A.querySelector('.menu b');
-  brand.style.cursor = 'pointer';
+  brand.style.cursor = 'pointer'; brand.tabIndex = 0; brand.setAttribute('role', 'button'); brand.setAttribute('aria-label', 'Replay intro');
   brand.onclick = function () { try { sessionStorage.removeItem('xl_intro'); } catch (e) {} location.reload(); };
 
   function release() {
     done = true;
     A.classList.remove('booting'); A.classList.add('live');
     $$('.hid', A).forEach(function (e) { e.classList.remove('hid'); });
-    imp.classList.remove('on'); skip.remove();
+    imp.classList.remove('on'); skip.remove(); A.removeAttribute('inert');
   }
   function finish() {
     if (done) return;
@@ -27,7 +27,7 @@
   try { seen = sessionStorage.getItem('xl_intro'); } catch (e) {}
   if (seen || matchMedia('(prefers-reduced-motion: reduce)').matches) { finish(); return; }
   try { sessionStorage.setItem('xl_intro', 1); } catch (e) {}
-  skip.onclick = finish;
+  A.setAttribute('inert', ''); skip.onclick = finish;
   addEventListener('keydown', function (e) { if (e.key === 'Escape') finish(); });
 
   // macOS clock
