@@ -5,8 +5,17 @@ document.getElementById('ex').onclick=function(){var v=function(i){return docume
 var IC=function(p){return'<svg viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor" style="display:block;pointer-events:none">'+p+'</svg>'};
 var ICON={play:IC('<path d="M7 4l13 8-13 8z"/>'),stop:IC('<path d="M6 6h12v12H6z"/>'),prevEdit:IC('<path d="M3 5h2v14H3zM22 5v14l-9-7zM13 5v14l-8-7z"/>'),nextEdit:IC('<path d="M19 5h2v14h-2zM2 5v14l9-7zM11 5v14l8-7z"/>'),prevFrame:IC('<path d="M6 5h2v14H6zM20 5v14L9 12z"/>'),nextFrame:IC('<path d="M16 5h2v14h-2zM4 5v14l11-7z"/>')};
 var FPS=24,$=function(s){return document.querySelector(s)},pad=function(v){return String(v).padStart(2,'0')};
-function mk(n,c){var t=0,cl=c.map(function(x){var o={n:x[0],s:t,l:x[1],h:x[2],T:x[3],sub:x[4]};t+=x[1];return o});return{name:n,clips:cl,dur:t,t:0}}
-var SQ=[mk('REUNION',[['REUNION',60,215,'REUNION','Short film \u00b7 Director']])];
+function mk(n,c,info){var t=0,cl=c.map(function(x){var o={n:x[0],s:t,l:x[1],h:x[2],T:x[3],sub:x[4]};t+=x[1];return o});return{name:n,clips:cl,dur:t,t:0,info:info||{}}}
+/* ===== YOUR WORKS =====
+   Each mk() is one work. Its info shows in the Controls tab when the work is selected.
+   mk('NAME', [clips], {type, role, year, desc})  (year is optional; leave out what you don't need) */
+var SQ=[
+mk('REUNION',[['REUNION',60,215,'REUNION','Short film \u00b7 Location Sound Recordist']],{
+  type:'Short film',
+  role:'Location Sound Recordist',
+  desc:'I was the location sound recordist on REUNION.'
+})
+];
 var cur=0,open=[0],pl=0,last=0,lastCi=-1,ph,rm;
 function tc(s){var f=Math.floor(s*FPS+1e-6),ss=Math.floor(f/FPS);return[0,Math.floor(ss/60),ss%60,f%FPS].map(pad).join(':')}
 function wf(n,k){var h='';for(var i=0;i<n;i++){var v=20+Math.abs(Math.sin(i*.31+k)*Math.cos(i*.07))*70+(i*7919%13);h+='<i style="height:'+Math.min(v,95)+'%"></i>'}return h}
@@ -36,8 +45,12 @@ else{t=q.t+(n-last)/1000;last=n;if(t>=q.dur-1/FPS){setT(q.dur);play(false);retur
 requestAnimationFrame(tick)}
 function jump(d){var q=SQ[cur],t=q.t,x=d<0?0:q.dur;q.clips.forEach(function(c){if(d<0&&c.s<t-.05&&c.s>x)x=c.s;if(d>0&&c.s>t+.01&&c.s<x)x=c.s});setT(x)}
 function tabs(){$('.tlh').innerHTML=open.map(function(i){return'<span class="stab'+(i===cur?' on':'')+'" data-s="'+i+'">'+SQ[i].name+(open.length>1?'<u data-x="'+i+'">\u00d7</u>':'')+'</span>'}).join('')+'<span class="tc"></span>'}
-function tree(){$('.tree').innerHTML='<div class="l1"><span class="fo"></span>SHORT FILM</div><div class="l2 hl" data-s="0"><span class="sw"></span>REUNION</div>'}
-function openSeq(i){play(false);if(open.indexOf(i)<0)open.push(i);cur=i;tabs();tree();build();setT(SQ[i].t)}
+function esc(x){return String(x).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function tree(){var g={},k,h='';SQ.forEach(function(q,i){k=(q.info.type||'Works').toUpperCase();(g[k]=g[k]||[]).push(i)});
+Object.keys(g).forEach(function(k){h+='<div class="l1"><span class="fo"></span>'+esc(k)+'</div>';g[k].forEach(function(i){h+='<div class="l2'+(i===cur?' hl':'')+'" data-s="'+i+'"><span class="sw"></span>'+esc(SQ[i].name)+'</div>'})});$('.tree').innerHTML=h}
+function props(){var q=SQ[cur],f=q.info,r=function(a,b){return b?'<div class="row"><span>'+a+'</span><b>'+esc(b)+'</b></div>':''};
+$('.props').innerHTML='<h3>'+esc(q.name)+'</h3>'+r('Format',f.type)+r('Role',f.role)+r('Year',f.year)+(f.desc?'<h3>Description</h3><p>'+esc(f.desc)+'</p>':'')}
+function openSeq(i){play(false);if(open.indexOf(i)<0)open.push(i);cur=i;tabs();tree();props();build();setT(SQ[i].t)}
 $('.tree').addEventListener('click',function(e){var el=e.target.closest('[data-s]');if(!el)return;var s=+el.dataset.s;if(s>=0)openSeq(s);});
 $('.tlh').addEventListener('click',function(e){var x=e.target.closest('[data-x]'),t=e.target.closest('[data-s]');if(x){var i=+x.dataset.x;open.splice(open.indexOf(i),1);if(cur===i)openSeq(open[0]);else{tabs()}}else if(t)openSeq(+t.dataset.s)});
 function bind(el,rect){el.addEventListener('pointerdown',function(e){if(e.button||e.clientX<rect().left)return;e.preventDefault();play(false);var mv=function(ev){var r=rect();setT((ev.clientX-r.left)/r.width*SQ[cur].dur)};mv(e);window.addEventListener('pointermove',mv);window.addEventListener('pointerup',function u(){window.removeEventListener('pointermove',mv);window.removeEventListener('pointerup',u)})})}
