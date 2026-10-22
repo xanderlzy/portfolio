@@ -179,3 +179,10 @@ input,select,textarea{font-size:16px}
 .frame:-webkit-full-screen .fsbar{display:flex}
 .frame.idle:fullscreen{cursor:none}.frame.idle:fullscreen .fsbar,.frame.idle:fullscreen .fsb{opacity:0;pointer-events:none}
 .frame.idle:-webkit-full-screen{cursor:none}.frame.idle:-webkit-full-screen .fsbar,.frame.idle:-webkit-full-screen .fsb{opacity:0;pointer-events:none}
+
+/* ---------- Mobile: let the page scroll so the Info / Project panel is reachable ---------- */
+@media(max-width:800px){
+.app{overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding-bottom:calc(env(safe-area-inset-bottom,0px) + 72px)}
+.app[data-v=edit][data-m=info]>:nth-child(5),.app[data-v=edit][data-m=project]>:nth-child(3){flex:none;min-height:min-content}
+.app[data-v=edit]>.panel:not(.mon) .props,.app[data-v=edit]>.panel:not(.mon) .tree{overflow:visible}
+}
