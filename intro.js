@@ -5,7 +5,7 @@
       A = document.querySelector('.app'), T = [], done = false;
   var $$ = function (s, r) { return [].slice.call((r || document).querySelectorAll(s)); };
   function at(ms, f) { T.push(setTimeout(f, ms)); }
-  if (matchMedia('(max-width:800px)').matches) hint.textContent = 'Tap anywhere for sound \u00b7 Drag the playhead to scrub \u00b7 Try the About and Export tabs';
+  if (matchMedia('(max-width:800px)').matches) hint.textContent = 'Tap anywhere for sound \u00b7 Drag the playhead to scrub \u00b7 Try the About and Contact tabs';
 
   // Clicking the brand name in the menu bar replays the intro.
   var brand = A.querySelector('.menu b');
