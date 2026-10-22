@@ -57,4 +57,4 @@ document.querySelectorAll('.mtabs button').forEach(function(b){b.onclick=functio
 
 ['pointerdown','keydown'].forEach(function(n){addEventListener(n,function u(){vid.muted=false;removeEventListener(n,u)},{passive:true})});
 
-(function(){var n=document.querySelectorAll('.loc [data-a]');n.forEach(function(b){b.onclick=function(){var t=document.getElementById('a-'+b.dataset.a);if(t)t.scrollIntoView({behavior:'smooth',block:'start'});n.forEach(function(x){x.classList.toggle('on',x===b)})}});var c=document.getElementById('abc');if(c)c.onclick=function(){document.querySelector('.tabs a[data-t=export]').click()}})();
+(function(){var c=document.getElementById('abc');if(c)c.onclick=function(){document.querySelector('.tabs a[data-t=export]').click()}})();
