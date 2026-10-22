@@ -4,6 +4,8 @@ F.forEach(function(f,i){var d=document.createElement('div');d.className='th'+(i<
 var app=document.querySelector('.app'),tb=document.querySelectorAll('.tabs a');
 tb.forEach(function(a){a.onclick=function(){app.dataset.v=a.dataset.t;tb.forEach(function(x){x.classList.toggle('on',x===a)})}});
 document.getElementById('ex').onclick=function(){var v=function(i){return document.getElementById(i).value};location.href='mailto:xanderlzy@gmail.com?subject='+encodeURIComponent(v('ct')+' enquiry from '+v('cn'))+'&body='+encodeURIComponent(v('cm')+'\n\n'+v('cn')+'\n'+v('ce'))};
+var IC=function(p){return'<svg viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor" style="display:block;pointer-events:none">'+p+'</svg>'};
+var ICON={play:IC('<path d="M7 4l13 8-13 8z"/>'),stop:IC('<path d="M6 6h12v12H6z"/>'),prevEdit:IC('<path d="M3 5h2v14H3zM22 5v14l-9-7zM13 5v14l-8-7z"/>'),nextEdit:IC('<path d="M19 5h2v14h-2zM2 5v14l9-7zM11 5v14l8-7z"/>'),prevFrame:IC('<path d="M6 5h2v14H6zM20 5v14L9 12z"/>'),nextFrame:IC('<path d="M16 5h2v14h-2zM4 5v14l11-7z"/>')};
 var FPS=24,$=function(s){return document.querySelector(s)},pad=function(v){return String(v).padStart(2,'0')};
 function mk(n,c){var t=0,cl=c.map(function(x){var o={n:x[0],s:t,l:x[1],h:x[2],T:x[3],sub:x[4]};t+=x[1];return o});return{name:n,clips:cl,dur:t,t:0}}
 var SQ=[mk('REUNION',[['REUNION',60,215,'REUNION','Short film \u00b7 Director']])];
@@ -26,7 +28,7 @@ var s=tc(t);$('.tlh .tc').textContent=s;$('.ctl .tc').textContent=s;$('.scrub i'
 $('.frame').style.background='radial-gradient(ellipse 60% 70% at '+(35+u*40)+'% 48%,hsl('+c.h+',45%,26%) 0,hsl('+c.h+',50%,9%) 45%,#05080d 100%)';
 if(ci!==lastCi){lastCi=ci;$('.frame h1').innerHTML=c.T.split('|').join('<br>');$('.frame p').textContent=c.sub;$('.rec').textContent='\u25cf '+c.n;
 document.querySelectorAll('.tr.v .clip').forEach(function(e,i){e.classList.toggle('sel',i===ci)})}}
-function play(on){pl=on===undefined?!pl:on;if(on===undefined)vid.muted=false;$('.btns span:nth-child(6)').textContent=pl?'\u25a0':'\u25b6';var q=SQ[cur];
+function play(on){pl=on===undefined?!pl:on;if(on===undefined)vid.muted=false;$('.btns span:nth-child(6)').innerHTML=pl?ICON.stop:ICON.play;var q=SQ[cur];
 if(!vr&&pl&&vid.readyState===0)vid.load();
 if(vr){if(pl){if(q.t>=q.dur-.1)setT(0);var pr=vid.play();if(pr&&pr.catch)pr.catch(function(){vid.muted=true;vid.play().catch(function(){})})}else vid.pause()}
 if(pl){if(!vr&&q.t>=q.dur-.1)setT(0);last=performance.now();requestAnimationFrame(tick)}}
@@ -42,7 +44,7 @@ $('.tree').addEventListener('click',function(e){var el=e.target.closest('[data-s
 $('.tlh').addEventListener('click',function(e){var x=e.target.closest('[data-x]'),t=e.target.closest('[data-s]');if(x){var i=+x.dataset.x;open.splice(open.indexOf(i),1);if(cur===i)openSeq(open[0]);else{tabs()}}else if(t)openSeq(+t.dataset.s)});
 function bind(el,rect){el.addEventListener('pointerdown',function(e){if(e.button||e.clientX<rect().left)return;e.preventDefault();play(false);var mv=function(ev){var r=rect();setT((ev.clientX-r.left)/r.width*SQ[cur].dur)};mv(e);window.addEventListener('pointermove',mv);window.addEventListener('pointerup',function u(){window.removeEventListener('pointermove',mv);window.removeEventListener('pointerup',u)})})}
 var rr=function(){return $('.ruler').getBoundingClientRect()};bind($('.ruler'),rr);bind($('.tracks'),rr);bind($('.scrub'),function(){return $('.scrub').getBoundingClientRect()});
-var B=document.querySelectorAll('.btns span');B[4].textContent='|\u25c0';B[6].textContent='\u25b6|';B[5].textContent='\u25b6';
+var B=document.querySelectorAll('.btns span');B[3].innerHTML=ICON.prevEdit;B[4].innerHTML=ICON.prevFrame;B[5].innerHTML=ICON.play;B[6].innerHTML=ICON.nextFrame;B[7].innerHTML=ICON.nextEdit;
 B[3].onclick=function(){jump(-1)};B[7].onclick=function(){jump(1)};B[5].onclick=function(){play()};B[4].onclick=function(){play(false);setT(SQ[cur].t-1/FPS)};B[6].onclick=function(){play(false);setT(SQ[cur].t+1/FPS)};
 addEventListener('keydown',function(e){if(app.dataset.v!=='edit'||/INPUT|TEXTAREA|SELECT/.test(e.target.tagName))return;var k=e.code,q=SQ[cur];
 if(k=='Space'){e.preventDefault();play()}else if(k=='ArrowLeft'){e.preventDefault();play(false);setT(q.t-1/FPS)}else if(k=='ArrowRight'){e.preventDefault();play(false);setT(q.t+1/FPS)}else if(k=='ArrowUp'){e.preventDefault();jump(-1)}else if(k=='ArrowDown'){e.preventDefault();jump(1)}else if(k=='Home')setT(0);else if(k=='End')setT(q.dur)});
