@@ -47,10 +47,12 @@ B[3].onclick=function(){jump(-1)};B[7].onclick=function(){jump(1)};B[5].onclick=
 addEventListener('keydown',function(e){if(app.dataset.v!=='edit'||/INPUT|TEXTAREA|SELECT/.test(e.target.tagName))return;var k=e.code,q=SQ[cur];
 if(k=='Space'){e.preventDefault();play()}else if(k=='ArrowLeft'){e.preventDefault();play(false);setT(q.t-1/FPS)}else if(k=='ArrowRight'){e.preventDefault();play(false);setT(q.t+1/FPS)}else if(k=='ArrowUp'){e.preventDefault();jump(-1)}else if(k=='ArrowDown'){e.preventDefault();jump(1)}else if(k=='Home')setT(0);else if(k=='End')setT(q.dur)});
 openSeq(0);SQ[0].t=0;setT(0);
-function vinit(){if(!isFinite(vid.duration)||vr)return;var q=SQ[0];q.dur=vid.duration;q.clips[0].l=vid.duration;vr=true;$('.frame').classList.add('hasv');ruler();setT(q.t)}
+function vinit(){if(!isFinite(vid.duration)||vr)return;var q=SQ[0];q.dur=vid.duration;q.clips[0].l=vid.duration;vr=true;$('.frame').classList.add('hasv');ruler();setT(q.t);if(pl){var pp=vid.play();if(pp&&pp.catch)pp.catch(function(){})}}
 ['loadedmetadata','loadeddata','canplay'].forEach(function(n){vid.addEventListener(n,vinit)});vid.addEventListener('error',function(){console.warn('REUNION video failed to load',vid.error)});vid.preload='metadata';vid.src=VIDEO_SRC+'#t=0.001';if(vid.readyState>=1)vinit();
 
 
 (function(){var e=document.getElementById('clk');function u(){var t=new Date().toLocaleTimeString('en-US',{timeZone:'Asia/Singapore',hour:'numeric',minute:'2-digit'}),x='Singapore \u00b7 '+t;if(e.textContent!==x)e.textContent=x}u();setInterval(u,1000)})();
 
 document.querySelectorAll('.mtabs button').forEach(function(b){b.onclick=function(){app.dataset.m=b.dataset.m;document.querySelectorAll('.mtabs button').forEach(function(x){x.classList.toggle('on',x===b)})}});
+
+['pointerdown','keydown'].forEach(function(n){addEventListener(n,function u(){vid.muted=false;removeEventListener(n,u)},{passive:true})});

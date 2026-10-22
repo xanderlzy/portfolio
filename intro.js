@@ -5,7 +5,7 @@
       A = document.querySelector('.app'), T = [], done = false;
   var $$ = function (s, r) { return [].slice.call((r || document).querySelectorAll(s)); };
   function at(ms, f) { T.push(setTimeout(f, ms)); }
-  if (matchMedia('(max-width:800px)').matches) hint.textContent = 'Drag the playhead to scrub \u00b7 Tap play \u00b7 Try the Import and Export tabs';
+  if (matchMedia('(max-width:800px)').matches) hint.textContent = 'Tap anywhere for sound \u00b7 Drag the playhead to scrub \u00b7 Try the Import and Export tabs';
 
   // Clicking the brand name in the menu bar replays the intro.
   var brand = A.querySelector('.menu b');
@@ -20,7 +20,7 @@
   }
   function finish() {
     if (done) return;
-    T.forEach(clearTimeout); play(false); release(); boot.remove(); setT(0);
+    T.forEach(clearTimeout); setT(0); play(!matchMedia('(prefers-reduced-motion: reduce)').matches); release(); boot.remove();
   }
 
   var seen = 0;
@@ -86,6 +86,5 @@
     hint.classList.add('on');
     play(true);
   });
-  at(t + 300 + 4500, function () { if (pl) play(false); });
   at(t + 300 + 7500, function () { hint.classList.remove('on'); });
 })();
