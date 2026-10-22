@@ -49,3 +49,5 @@ openSeq(0);SQ[0].t=0;setT(0);
 function vinit(){if(!isFinite(vid.duration)||vr)return;var q=SQ[0];q.dur=vid.duration;q.clips[0].l=vid.duration;vr=true;$('.frame').classList.add('hasv');ruler();setT(q.t)}
 vid.addEventListener('loadeddata',vinit);vid.src=VIDEO_SRC;if(vid.readyState>=2)vinit();
 
+
+(function(){var e=document.getElementById('clk');function u(){var t=new Date().toLocaleTimeString('en-US',{timeZone:'Asia/Singapore',hour:'numeric',minute:'2-digit'}),x='Singapore \u00b7 '+t;if(e.textContent!==x)e.textContent=x}u();setInterval(u,1000)})();

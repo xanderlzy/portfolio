@@ -30,7 +30,7 @@
   addEventListener('keydown', function (e) { if (e.key === 'Escape') finish(); });
 
   // macOS clock
-  $$('.mbar span').pop().textContent = new Date().toLocaleString('en-US', { weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
+  $$('.mbar span').pop().textContent = new Date().toLocaleString('en-US', { timeZone: 'Asia/Singapore', weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
 
   // ---- Stage 1: macOS desktop, cursor clicks the Premiere Pro dock icon ----
   var cur = document.getElementById('cur'), pr = document.getElementById('dpr'),
@@ -45,8 +45,8 @@
   at(1550, function () { pr.classList.remove('hv'); pr.classList.add('bn', 'run'); });
 
   // ---- Stage 2: splash screen with launch status messages ----
-  var L = ['Initializing application…', 'Loading preferences…', 'Scanning plug-ins…', 'Initializing Mercury Playback Engine…',
-           'Loading Lumetri Color…', 'Starting Dynamic Link…', 'Opening XANDER_LEE_Portfolio.prproj…', 'Restoring workspace: Editing'];
+  var L = ['Initializing application…', 'Loading preferences…', 'Scanning plug-ins…', 'Initializing playback engine…',
+           'Loading color tools…', 'Starting link service…', 'Opening XANDER_LEE_Portfolio.xlproj…', 'Restoring workspace: Editing'];
   at(1900, function () { sp.classList.add('on'); });
   L.forEach(function (s, i) {
     at(2100 + i * 330, function () { st.textContent = s; bar.style.width = (i + 1) / L.length * 100 + '%'; });
