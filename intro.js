@@ -19,7 +19,7 @@
   }
   function finish() {
     if (done) return;
-    T.forEach(clearTimeout); play(false); release(); boot.remove(); setT(2.5);
+    T.forEach(clearTimeout); play(false); release(); boot.remove(); setT(0);
   }
 
   var seen = 0;
@@ -55,7 +55,7 @@
   // ---- Stage 3: workspace appears, media imports, timeline assembles ----
   var R = 4800,
       rows = $$('.tree>div', A), clips = $$('.tracks .clip', A),
-      files = ['A001_A011_0815.mov', 'A001_A006_0815.mov', 'B001_B002_0815CS.mov', 'A001_A013_0815FN.mov', 'D_CAM_Interview_01.mov', 'Neon_Hours_Perf.mov', 'Doc_Cut_v3.mov', 'Title_Card.png'],
+      files = ['REUNION.mp4'],
       iname = imp.querySelector('span'), ibar = imp.querySelector('.bar i'), icount = imp.querySelector('em');
   rows.concat(clips).forEach(function (e) { e.classList.add('hid'); });
   function rv(i, ms) { at(R + ms, function () { A.children[i].classList.add('rv'); }); }
