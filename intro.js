@@ -9,14 +9,19 @@
 
   // Clicking the brand name in the menu bar replays the intro.
   var brand = A.querySelector('.menu b');
-  brand.style.cursor = 'pointer'; brand.tabIndex = 0; brand.setAttribute('role', 'button'); brand.setAttribute('aria-label', 'Replay intro');
+  brand.style.cursor = 'pointer';
+  brand.setAttribute('role', 'button'); brand.tabIndex = 0; brand.setAttribute('aria-label', 'Replay intro');
   brand.onclick = function () { try { sessionStorage.removeItem('xl_intro'); } catch (e) {} location.reload(); };
+  brand.onkeydown = function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); brand.onclick(); } };
 
   function release() {
     done = true;
+    var hadFocus = document.activeElement === skip;
+    A.inert = false;
     A.classList.remove('booting'); A.classList.add('live');
     $$('.hid', A).forEach(function (e) { e.classList.remove('hid'); });
-    imp.classList.remove('on'); skip.remove(); A.removeAttribute('inert');
+    imp.classList.remove('on'); skip.remove();
+    if (hadFocus) { var t0 = A.querySelector('.tabs button.on'); if (t0) t0.focus({ preventScroll: true }); }
   }
   function finish() {
     if (done) return;
@@ -27,7 +32,8 @@
   try { seen = sessionStorage.getItem('xl_intro'); } catch (e) {}
   if (seen || matchMedia('(prefers-reduced-motion: reduce)').matches) { finish(); return; }
   try { sessionStorage.setItem('xl_intro', 1); } catch (e) {}
-  A.setAttribute('inert', ''); skip.onclick = finish;
+  A.inert = true; skip.focus({ preventScroll: true });
+  skip.onclick = finish;
   addEventListener('keydown', function (e) { if (e.key === 'Escape') finish(); });
 
   // macOS clock
