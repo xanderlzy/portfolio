@@ -27,6 +27,7 @@ $('.frame').style.background='radial-gradient(ellipse 60% 70% at '+(35+u*40)+'% 
 if(ci!==lastCi){lastCi=ci;$('.frame h1').innerHTML=c.T.split('|').join('<br>');$('.frame p').textContent=c.sub;$('.rec').textContent='\u25cf '+c.n;
 document.querySelectorAll('.tr.v .clip').forEach(function(e,i){e.classList.toggle('sel',i===ci)})}}
 function play(on){pl=on===undefined?!pl:on;if(on===undefined)vid.muted=false;$('.btns span:nth-child(6)').textContent=pl?'\u25a0':'\u25b6';var q=SQ[cur];
+if(!vr&&pl&&vid.readyState===0)vid.load();
 if(vr){if(pl){if(q.t>=q.dur-.1)setT(0);var pr=vid.play();if(pr&&pr.catch)pr.catch(function(){vid.muted=true;vid.play().catch(function(){})})}else vid.pause()}
 if(pl){if(!vr&&q.t>=q.dur-.1)setT(0);last=performance.now();requestAnimationFrame(tick)}}
 function tick(n){if(!pl)return;var q=SQ[cur],t;
@@ -47,7 +48,7 @@ addEventListener('keydown',function(e){if(app.dataset.v!=='edit'||/INPUT|TEXTARE
 if(k=='Space'){e.preventDefault();play()}else if(k=='ArrowLeft'){e.preventDefault();play(false);setT(q.t-1/FPS)}else if(k=='ArrowRight'){e.preventDefault();play(false);setT(q.t+1/FPS)}else if(k=='ArrowUp'){e.preventDefault();jump(-1)}else if(k=='ArrowDown'){e.preventDefault();jump(1)}else if(k=='Home')setT(0);else if(k=='End')setT(q.dur)});
 openSeq(0);SQ[0].t=0;setT(0);
 function vinit(){if(!isFinite(vid.duration)||vr)return;var q=SQ[0];q.dur=vid.duration;q.clips[0].l=vid.duration;vr=true;$('.frame').classList.add('hasv');ruler();setT(q.t)}
-vid.addEventListener('loadeddata',vinit);vid.src=VIDEO_SRC;if(vid.readyState>=2)vinit();
+['loadedmetadata','loadeddata','canplay'].forEach(function(n){vid.addEventListener(n,vinit)});vid.addEventListener('error',function(){console.warn('REUNION video failed to load',vid.error)});vid.preload='metadata';vid.src=VIDEO_SRC+'#t=0.001';if(vid.readyState>=1)vinit();
 
 
 (function(){var e=document.getElementById('clk');function u(){var t=new Date().toLocaleTimeString('en-US',{timeZone:'Asia/Singapore',hour:'numeric',minute:'2-digit'}),x='Singapore \u00b7 '+t;if(e.textContent!==x)e.textContent=x}u();setInterval(u,1000)})();
