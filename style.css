@@ -140,3 +140,20 @@ input,select,textarea{font-size:16px}
 .sum b{width:90px}
 #hint{white-space:normal;text-align:center;width:max-content;max-width:90vw}
 }
+
+/* ---------- About page ---------- */
+.loc div[data-a]{cursor:pointer}.loc div[data-a]:not(.on):hover{background:#2c2c2c}
+.abh{display:grid;grid-template-columns:minmax(220px,2fr) 3fr;gap:24px;align-items:start;margin-bottom:28px}
+.pic{margin:0}.pic img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;object-position:45% 30%;border:2px solid var(--blue)}
+.pic figcaption{margin-top:5px;font-size:11px;color:var(--dim)}
+.bio h2{margin:0 0 4px;font-size:28px;font-weight:600;color:#fff}
+.bio .role{color:var(--blue);margin:0 0 14px}
+.bio p{color:#c4c4c4;font-size:13px;line-height:1.65;margin:0 0 10px}
+.bio .q{border-left:2px solid var(--blue);padding-left:10px;color:var(--dim);font-style:italic;margin-top:16px}
+.ab h4{margin:0 0 10px;color:var(--dim);font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-bottom:28px}
+.card{background:#1a1a1a;border:1px solid #3d3d3d;border-left:3px solid #2a5a9a;border-radius:3px;padding:10px 12px;line-height:1.5}
+.card b{display:block;color:#fff;font-weight:600;margin-bottom:4px}.card span{color:#aaa}
+.card.c2{border-left-color:#1f9d4d}.card.c3{border-left-color:var(--mus)}.card.c0{border-left-color:var(--blue)}
+.kv{display:flex;justify-content:space-between;gap:12px;padding:4px 0;color:var(--dim)}.kv b{color:var(--blue);font-weight:400;text-align:right}
+@media(max-width:800px){.abh{grid-template-columns:1fr;gap:14px}.bio p{font-size:14px}.card{font-size:13px}}
