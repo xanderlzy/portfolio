@@ -19,6 +19,7 @@ function stills(slug, count) {
 window.SITE = {
   email: "xanderlzy@gmail.com",
   instagram: "kneesurgerey",
+  linkedin: "https://www.linkedin.com/in/xanderlzy/",
   // YouTube ID of the showreel. Leave empty to hide the reel section.
   showreelId: "",
   // Formspree form ID (the part after formspree.io/f/). Leave empty until set up.

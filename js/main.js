@@ -220,6 +220,7 @@
     $("#year").textContent = new Date().getFullYear();
     if (SITE.cv) $("#cv-link").href = SITE.cv;
     if (SITE.instagram) $("#ig").href = "https://instagram.com/" + SITE.instagram;
+    if (SITE.linkedin) document.querySelectorAll(".li-link").forEach(function (a) { a.href = SITE.linkedin; });
     if (SITE.portrait) {
       $(".portrait__img").innerHTML = '<img src="' + SITE.portrait + '" alt="Portrait of Xander Lee" loading="lazy">';
     }

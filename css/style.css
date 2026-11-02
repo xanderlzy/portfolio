@@ -312,8 +312,15 @@ button { font: inherit; color: inherit; }
   display: block;
   background: none; border: 0; padding: 0;
   text-align: left; cursor: copy;
-  margin-block: clamp(24px, 4vw, 48px) clamp(56px, 8vw, 96px);
+  margin-block: clamp(24px, 4vw, 48px) 0;
 }
+.contact__also { margin-block: 28px clamp(56px, 8vw, 96px); }
+.contact__also a {
+  text-decoration: none;
+  border-bottom: 1px solid var(--muted);
+  padding-bottom: 3px;
+}
+.contact__also a:hover { border-color: var(--red); }
 .email__addr {
   display: inline-block;
   font: 500 clamp(1.9rem, 7.5vw, 6.5rem)/1 var(--f-head);
@@ -373,6 +380,7 @@ button { font: inherit; color: inherit; }
   color: var(--muted);
 }
 .foot a { text-decoration: none; }
+.foot__links { display: flex; gap: 24px; }
 .foot a:hover { color: var(--ink); }
 
 /* ---------- Loupe (project dialog) ---------- */
