@@ -10,13 +10,26 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;1,8..60,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
+  <script>
+    // decided before first paint so the opening titles never flash
+    (function (d) {
+      if (!matchMedia("(prefers-reduced-motion: no-preference)").matches) return;
+      d.classList.add("motion");
+      try {
+        if (!location.hash && !sessionStorage.getItem("seen-titles")) {
+          d.classList.add("intro");
+          sessionStorage.setItem("seen-titles", "1");
+        }
+      } catch (e) {}
+    })(document.documentElement);
+  </script>
 </head>
 <body>
   <a class="skip" href="#works">Skip to works</a>
 
   <header class="bar">
     <a class="bar__mark" href="#top" aria-label="Xander Lee, back to top">Xander Lee</a>
-    <span class="bar__tc mono" aria-hidden="true" id="timecode">00:00:00:00</span>
+    <span class="bar__tc mono" aria-hidden="true"><span class="bar__slate" id="slate">Sc 00 &middot; Titles</span><span id="timecode">00:00:00:00</span></span>
     <nav class="bar__nav" aria-label="Main">
       <a href="#works">Works</a>
       <a href="#about">About</a>
@@ -38,7 +51,7 @@
 
       <div class="hero__inner">
         <p class="hero__kicker mono">Filmmaker</p>
-        <h1 class="hero__name">Xander<br>Lee</h1>
+        <h1 class="hero__name"><span class="ln"><span>Xander</span></span> <span class="ln"><span>Lee</span></span></h1>
         <p class="hero__line">Mostly behind the camera. Sometimes behind the boom, the timeline, the grade&nbsp;&mdash; wherever the film needs me.</p>
         <a class="hero__cue mono" href="#works">&#9656; Roll the contact sheet</a>
       </div>

@@ -4,6 +4,8 @@
   var SITE = window.SITE || {};
   var WORKS = window.WORKS || [];
   var PLACEHOLDER_FRAMES = 6;
+  // set in <head>; off when the visitor prefers reduced motion
+  var MOTION = document.documentElement.classList.contains("motion");
 
   var $ = function (sel) { return document.querySelector(sel); };
   var pad = function (n) { return String(n).padStart(2, "0"); };
@@ -38,7 +40,7 @@
       var frames = frameSources(work).map(function (src, j) {
         var n = j + 1;
         return (
-          '<button class="frame" type="button" data-slug="' + work.slug + '" style="' + frameStyle(work) + '" ' +
+          '<button class="frame" type="button" data-slug="' + work.slug + '" style="' + frameStyle(work) + ";--i:" + j + '" ' +
           'aria-label="' + work.title + ", frame " + n + ', open project">' +
           frameInner(src, n) +
           '<span class="frame__no">' + n + "A</span>" +
@@ -82,11 +84,44 @@
     return "<div><dt>" + label + '</dt><span class="leader"></span><dd>' + value + "</dd></div>";
   }
 
+  /* A still flies from the sheet into the screen, and back on close */
+  var FLY_MS = 480;
+
+  function box(el) {
+    var r = el.getBoundingClientRect();
+    return { left: r.left + "px", top: r.top + "px", width: r.width + "px", height: r.height + "px" };
+  }
+
+  function inView(el) {
+    var r = el.getBoundingClientRect();
+    return r.bottom > 0 && r.top < window.innerHeight && r.right > 0 && r.left < window.innerWidth;
+  }
+
+  // the trigger's image, if the trigger is a loaded still we can fly
+  function flyable(trigger) {
+    if (!MOTION || !trigger || !trigger.classList.contains("frame") || !Element.prototype.animate) return null;
+    var img = trigger.querySelector("img");
+    return img && img.complete && img.naturalWidth && inView(trigger) ? img : null;
+  }
+
+  function fly(still, from, to, done) {
+    var img = document.createElement("img");
+    img.className = "loupe__fly";
+    img.alt = "";
+    img.src = still.currentSrc || still.src;
+    loupe.appendChild(img);
+    img.animate([from, to], { duration: FLY_MS, easing: "cubic-bezier(.2, .7, .1, 1)", fill: "forwards" })
+      .onfinish = function () { done(img); };
+  }
+
   function open(slug, trigger) {
     var hit = find(slug);
     if (!hit) return;
     var work = hit.work;
     lastTrigger = trigger || null;
+    var opening = !loupe.open;
+    var still = opening && flyable(trigger);
+    var from = still && box(trigger);
 
     $("#loupe-roll").textContent = "Roll " + pad(hit.index + 1) + " · " + work.type;
     $("#loupe-title").textContent = work.title;
@@ -107,16 +142,41 @@
         "<figcaption>" + (j + 1) + "A</figcaption></figure>";
     }).join("");
 
-    if (!loupe.open) loupe.showModal();
+    loupe.classList.toggle("is-flying", !!still);
+    if (opening) loupe.showModal();
     loupe.scrollTop = 0;
+    if (still) {
+      fly(still, from, box($("#loupe-screen")), function (img) {
+        img.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 250, fill: "forwards" })
+          .onfinish = function () { img.remove(); };
+      });
+    }
     if (location.hash !== "#" + slug) history.pushState(null, "", "#" + slug);
   }
 
+  var closing = false;
   function close() {
-    if (loupe.open) loupe.close();
+    if (!loupe.open || closing) return;
+    var still = flyable(lastTrigger);
+    var screen = $("#loupe-screen");
+    if (!still || !inView(screen)) { loupe.close(); return; }
+    closing = true;
+    loupe.classList.add("is-leaving");
+    fly(still, box(screen), box(lastTrigger), function (img) {
+      loupe.close();
+      img.remove();
+      closing = false;
+    });
   }
 
+  // Esc goes through close() so it gets the same flight back
+  loupe.addEventListener("cancel", function (e) {
+    e.preventDefault();
+    close();
+  });
+
   loupe.addEventListener("close", function () {
+    loupe.classList.remove("is-flying", "is-leaving");
     $("#loupe-screen").innerHTML = ""; // stops playback
     if (find(location.hash.slice(1))) history.replaceState(null, "", "#works");
     if (lastTrigger) lastTrigger.focus({ preventScroll: true });
@@ -135,20 +195,80 @@
   window.addEventListener("popstate", syncWithHash);
   window.addEventListener("hashchange", syncWithHash);
 
-  /* ---------- Timecode tied to scroll (24 fps) ---------- */
-  function initTimecode() {
+  /* ---------- Scroll: timecode (24 fps) and hero depth ---------- */
+  function initScroll() {
     var tc = $("#timecode");
+    var bg = MOTION && $(".hero__bg img");
     var ticking = false;
     function draw() {
-      var f = Math.floor(window.scrollY / 3);
+      var y = window.scrollY;
+      var f = Math.floor(y / 3);
       var fr = f % 24, s = Math.floor(f / 24);
       tc.textContent = pad(Math.floor(s / 3600)) + ":" + pad(Math.floor(s / 60) % 60) + ":" + pad(s % 60) + ":" + pad(fr);
+      // the photo trails the page, so the type seems to sit in front of it
+      if (bg && y < window.innerHeight * 1.2) bg.style.translate = "0 " + (y * 0.3).toFixed(1) + "px";
       ticking = false;
     }
     window.addEventListener("scroll", function () {
       if (!ticking) { ticking = true; requestAnimationFrame(draw); }
     }, { passive: true });
     draw();
+  }
+
+  /* ---------- Slate: which scene you're in ---------- */
+  function initSlate() {
+    var slate = $("#slate");
+    var scenes = [[".hero", "00", "Titles"], ["#works", "01", "Works"], ["#about", "02", "About"], ["#contact", "03", "Contact"]];
+    if (!("IntersectionObserver" in window)) return;
+
+    function show(scene) {
+      var text = "Sc " + scene[1] + " \u00b7 " + scene[2];
+      if (slate.textContent === text) return;
+      slate.textContent = text;
+      document.querySelectorAll(".bar__nav a").forEach(function (a) {
+        a.classList.toggle("is-current", a.getAttribute("href") === scene[0]);
+      });
+      if (MOTION) {
+        slate.classList.remove("is-flip");
+        void slate.offsetWidth; // restart the flip
+        slate.classList.add("is-flip");
+      }
+    }
+
+    // a thin line across the middle of the screen decides the scene
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) show(entry.target.scene);
+      });
+    }, { rootMargin: "-45% 0px -54% 0px" });
+    scenes.forEach(function (scene) {
+      var el = $(scene[0]);
+      el.scene = scene;
+      io.observe(el);
+    });
+  }
+
+  /* ---------- Rolls and section titles feed in on scroll ---------- */
+  function initReveals() {
+    if (!MOTION || !("IntersectionObserver" in window)) return;
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add("is-in");
+        io.unobserve(entry.target);
+      });
+    }, { rootMargin: "0px 0px -12% 0px" });
+    document.querySelectorAll(".roll, .section-head").forEach(function (el) {
+      el.classList.add("pending");
+      io.observe(el);
+    });
+  }
+
+  /* ---------- Opening titles ---------- */
+  function initTitles() {
+    var root = document.documentElement;
+    // drop the masks once the titles have played
+    if (root.classList.contains("intro")) setTimeout(function () { root.classList.remove("intro"); }, 2200);
   }
 
   /* ---------- Email copy ---------- */
@@ -234,7 +354,10 @@
   }
 
   renderSheet();
-  initTimecode();
+  initTitles();
+  initReveals();
+  initScroll();
+  initSlate();
   initEmail();
   initForm();
   initConfig();
