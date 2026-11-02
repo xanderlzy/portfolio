@@ -202,17 +202,14 @@ button { font: inherit; color: inherit; }
   color: rgba(236, 230, 220, .28);
   font-size: .625rem;
 }
-.frame__no,
-.frame__edge {
-  position: absolute; left: 0;
+.frame__no {
+  position: absolute; left: 0; bottom: -21px;
   font: 500 .625rem/1 var(--f-mono);
   letter-spacing: .1em;
   color: var(--red); opacity: .75;
   white-space: nowrap;
   pointer-events: none;
 }
-.frame__no { bottom: -21px; }
-.frame__edge { top: -21px; }
 @media (hover: hover) {
   .strip__track:hover .frame:not(:hover) { opacity: .5; }
 }

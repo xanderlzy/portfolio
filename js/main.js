@@ -4,7 +4,6 @@
   var SITE = window.SITE || {};
   var WORKS = window.WORKS || [];
   var PLACEHOLDER_FRAMES = 6;
-  var EDGE_CODE = "XLZY 5219";
 
   var $ = function (sel) { return document.querySelector(sel); };
   var pad = function (n) { return String(n).padStart(2, "0"); };
@@ -38,11 +37,10 @@
       var rollNo = pad(i + 1);
       var frames = frameSources(work).map(function (src, j) {
         var n = j + 1;
-        var edge = j % 3 === 0 ? '<span class="frame__edge">' + EDGE_CODE + " &#9656; " + rollNo + "</span>" : "";
         return (
           '<button class="frame" type="button" data-slug="' + work.slug + '" style="' + frameStyle(work) + '" ' +
           'aria-label="' + work.title + ", frame " + n + ', open project">' +
-          frameInner(src, n) + edge +
+          frameInner(src, n) +
           '<span class="frame__no">' + n + "A</span>" +
           "</button>"
         );
