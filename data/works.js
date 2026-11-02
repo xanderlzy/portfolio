@@ -23,7 +23,7 @@ window.SITE = {
   // YouTube ID of the showreel. Leave empty to hide the reel section.
   showreelId: "",
   // Formspree form ID (the part after formspree.io/f/). Leave empty until set up.
-  formspreeId: "",
+  formspreeId: "meaapllz",
   cv: "assets/cv/Xander-Lee-CV.pdf",
   portrait: "assets/about/portrait.jpg"
 };
