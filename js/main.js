@@ -133,6 +133,7 @@
     }
   }
   window.addEventListener("popstate", syncWithHash);
+  window.addEventListener("hashchange", syncWithHash);
 
   /* ---------- Timecode tied to scroll (24 fps) ---------- */
   function initTimecode() {

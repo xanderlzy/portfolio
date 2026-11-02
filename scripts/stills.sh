@@ -12,10 +12,14 @@ for dir in assets/works/*/frames; do
   rm -rf "$out"
   mkdir -p "$out"
   n=0
-  for f in $(ls "$dir" | sort -V); do
-    case "$f" in .*) continue ;; esac
+  # read line by line so filenames with spaces ("Screenshot … PM.png") work
+  list=$(ls "$dir" | sort -V)
+  while IFS= read -r f; do
+    case "$f" in .*|"") continue ;; esac
     n=$((n + 1))
     sips -s format jpeg -s formatOptions 78 -Z 1600 "$dir/$f" --out "$out/$(printf %02d $n).jpg" >/dev/null
-  done
+  done <<EOF
+$list
+EOF
   echo "$slug: $n stills"
 done

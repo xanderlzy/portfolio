@@ -38,11 +38,26 @@ window.WORKS = [
     kit: "Sony NX5P",
     programme: "NP School of Film & Media Studies",
     blurb:
-      "I lit it, shot it, then took it into the grade so the look stayed the same from set to screen. [Draft: add a line about the look you were going for.]",
+      "As the DOP, I was responsible for the look of the film. I decided to go for a handheld style to give the film a more intimate feeling. I was also the colourist for this project, which meant I was responsible for the final look of the film. The most challenging part of this was grading the film to be day for night.",
     youtubeId: "Rem9z2wEJGM",
     tone: "#2a2420",
     aspect: "4 / 3",
     frames: stills("anya-vapa", 7)
+  },
+  {
+    slug: "tipped",
+    title: "TIPPED",
+    year: 2026,
+    type: "Short film",
+    roles: ["Editor"],
+    short: "Editor",
+    kit: "Sony PMW-F5 CineAlta",
+    programme: "NP School of Film & Media Studies",
+    blurb:
+      "As the editor, I was responsible for the pacing and structure of the film. I worked closely with the director to ensure that the story was told in the most effective way possible. The most challenging part of this was finding the right balance between tension and release.",
+    youtubeId: "Lm9FZ-67Puc",
+    tone: "#241c1c",
+    frames: stills("tipped", 7)
   },
   {
     slug: "forget-the-club",
@@ -54,7 +69,7 @@ window.WORKS = [
     kit: "Sony FX3",
     programme: "NP School of Film & Media Studies",
     blurb:
-      "My film from first idea to final grade. I directed it, cut it and coloured it, which also meant I was the only one to blame. [Draft: what's it about?]",
+      "This is my first short film as a director. I was responsible for the overall vision of the film, seeing it through from concept to completion. The most challenging part of this was making sure that the story was told in a way that was engaging and entertaining.",
     youtubeId: "",
     tone: "#1f2226",
     frames: []
@@ -69,7 +84,7 @@ window.WORKS = [
     kit: "Sony FX3",
     programme: "NP School of Film & Media Studies",
     blurb:
-      "Two jobs nobody notices when they're done right. I dressed the world on screen and made sure it sounded like somewhere real. [Draft: add a detail you're proud of.]",
+      "Sound and Art: Two jobs nobody notices when they're done right. This was my first stint doing sound for a film, and I learned a lot about how to make a film sound good. I also did some art direction for this film, which meant I was responsible for the look of the film. The most challenging part of this was making sure that the sound and visuals worked together to create the right mood, as well as making the scene fit the setting of the story.",
     youtubeId: "0R0SapdQEkc",
     tone: "#26221b",
     frames: stills("reunion", 8)
@@ -84,7 +99,7 @@ window.WORKS = [
     kit: "Sony NX5P",
     programme: "NP School of Film & Media Studies",
     blurb:
-      "I found the rhythm in the footage and cut it into a film. [Draft: one line on the edit.]",
+      "OH SHOOT! is a comedy short film. The biggest challenge in the comedy genre is never in the jokes itself, but the timing and delivery. Therefore, as the editor, I could make or break the film. I had to make sure that the pacing was just right, and that the jokes landed as intended. The most challenging part of this was making sure that the timing of the jokes was perfect, as well as making sure that the film flowed well from scene to scene.",
     youtubeId: "vMbxpeb2DIQ",
     tone: "#1c2120",
     frames: stills("oh-shoot", 7)

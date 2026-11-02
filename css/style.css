@@ -82,6 +82,32 @@ button { font: inherit; color: inherit; }
   display: flex; align-items: flex-end;
   padding: 120px var(--gutter) clamp(48px, 9vh, 96px);
 }
+/* crew photo behind the type, played like a held showreel shot */
+.hero__bg {
+  position: absolute; inset: 0;
+  overflow: hidden;
+}
+.hero__bg img {
+  width: 100%; height: 100%;
+  object-fit: cover; object-position: 60% 40%;
+  animation: push-in 40s ease-out both;
+}
+@keyframes push-in { from { transform: scale(1); } to { transform: scale(1.08); } }
+/* darken toward the type (left) and fade into the page (bottom) */
+.hero__bg::after {
+  content: "";
+  position: absolute; inset: 0;
+  background:
+    linear-gradient(0deg, var(--bg) 0%, rgba(5, 5, 5, 0) 40%),
+    linear-gradient(90deg, rgba(5, 5, 5, .9) 0%, rgba(5, 5, 5, .6) 50%, rgba(5, 5, 5, .3) 100%);
+}
+.hero__inner { position: relative; }
+.hero__credit {
+  position: absolute; right: var(--gutter); bottom: clamp(48px, 9vh, 96px);
+  color: var(--muted); text-decoration: none; font-size: .625rem;
+}
+.hero__credit:hover { color: var(--ink); }
+
 .corner {
   position: absolute; width: 28px; height: 28px;
   border: 0 solid var(--muted);
