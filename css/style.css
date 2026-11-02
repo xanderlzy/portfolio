@@ -6,7 +6,8 @@
   --muted: #8f877c;
   --line: #222120;
   --red: #e2402f;         /* safelight */
-  --gutter: clamp(16px, 5vw, 72px);
+  /* never narrower than the notch when a phone is held sideways */
+  --gutter: max(clamp(16px, 5vw, 72px), env(safe-area-inset-left, 0px), env(safe-area-inset-right, 0px));
 
   --f-head: "Oswald", "Arial Narrow", sans-serif;
   --f-body: "Source Serif 4", Georgia, serif;
@@ -14,7 +15,7 @@
 }
 
 *, *::before, *::after { box-sizing: border-box; }
-html { scroll-behavior: smooth; scroll-padding-top: 64px; }
+html { scroll-behavior: smooth; scroll-padding-top: calc(64px + env(safe-area-inset-top, 0px)); }
 body {
   margin: 0;
   background: var(--bg);
@@ -54,7 +55,8 @@ button { font: inherit; color: inherit; }
 .bar {
   position: fixed; inset: 0 0 auto 0; z-index: 50;
   display: flex; align-items: center; justify-content: space-between; gap: 16px;
-  padding: 14px var(--gutter);
+  /* extend up under the phone's status bar so page content can't show through it */
+  padding: calc(14px + env(safe-area-inset-top, 0px)) var(--gutter) 14px;
   background: var(--bg);
   border-bottom: 1px solid var(--line);
 }
@@ -401,7 +403,8 @@ button { font: inherit; color: inherit; }
 .loupe__head {
   position: sticky; top: 0; z-index: 2;
   display: flex; justify-content: space-between; align-items: center;
-  padding: 16px 0; background: var(--bg);
+  padding: calc(16px + env(safe-area-inset-top, 0px)) 0 16px;
+  background: var(--bg);
   border-bottom: 1px solid var(--line);
   margin-bottom: 32px;
 }
