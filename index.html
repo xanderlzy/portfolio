@@ -1,93 +1,183 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Xander Lee – Filmmaker</title>
-<link rel="stylesheet" href="style.css?v=8">
-<link rel="stylesheet" href="intro.css?v=8">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Xander Lee — Filmmaker</title>
+  <meta name="description" content="Xander Lee — Singapore-based filmmaker and camera person. DOP, director, editor, colourist.">
+  <meta name="theme-color" content="#0e0d0c">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;1,8..60,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-<div class="app booting" data-v="edit" data-m="info">
-  <div class="menu"><b>Xander Lee</b><span aria-hidden="true">File</span><span aria-hidden="true">Edit</span><span aria-hidden="true">Clip</span><span aria-hidden="true">Sequence</span><span aria-hidden="true">Markers</span><span aria-hidden="true">Graphics and Titles</span><span aria-hidden="true">View</span><span aria-hidden="true">Window</span><span aria-hidden="true">Help</span><span id="clk" aria-hidden="true">Singapore</span></div>
-  <div class="top">
-    <nav class="tabs" aria-label="Sections"><span aria-hidden="true">&#8962;</span><button type="button" data-t="import">About</button><button type="button" data-t="edit" class="on" aria-current="page">Works</button><button type="button" data-t="export">Contact</button></nav>
-    <div class="title">XANDER_LEE_Portfolio_2026 <i>– Edited</i></div>
-    <button type="button" class="share" id="shr" aria-label="Share this portfolio">Share</button>
-  </div>
+  <a class="skip" href="#works">Skip to works</a>
 
-  <section class="panel">
-    <div class="ptabs"><span class="on">Project: XANDER_LEE_Portfolio</span></div>
-    <div class="tree">
-      <div class="l1"><span class="fo"></span>SHORT FILM</div>
-      <div class="l2 hl" data-s="0"><span class="sw"></span>REUNION</div>
+  <header class="bar">
+    <a class="bar__mark" href="#top" aria-label="Xander Lee, back to top">Xander Lee</a>
+    <span class="bar__tc mono" aria-hidden="true" id="timecode">00:00:00:00</span>
+    <nav class="bar__nav" aria-label="Main">
+      <a href="#works">Works</a>
+      <a href="#about">About</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+
+  <main id="top">
+    <!-- HERO -->
+    <section class="hero" aria-label="Intro">
+      <span class="corner corner--tl" aria-hidden="true"></span>
+      <span class="corner corner--tr" aria-hidden="true"></span>
+      <span class="corner corner--bl" aria-hidden="true"></span>
+      <span class="corner corner--br" aria-hidden="true"></span>
+
+      <div class="hero__inner">
+        <p class="hero__kicker mono">Filmmaker</p>
+        <h1 class="hero__name">Xander<br>Lee</h1>
+        <p class="hero__line">Mostly behind the camera. Sometimes behind the boom, the timeline, the grade&nbsp;&mdash; wherever the film needs me.</p>
+        <a class="hero__cue mono" href="#works">&#9656; Roll the contact sheet</a>
+      </div>
+    </section>
+
+    <!-- SHOWREEL (hidden until SITE.showreelId is set) -->
+    <section class="reel" id="reel" hidden aria-label="Showreel">
+      <div class="reel__frame"></div>
+    </section>
+
+    <!-- WORKS -->
+    <section class="works" id="works" aria-labelledby="works-title">
+      <header class="section-head">
+        <span class="mono section-head__no">01</span>
+        <h2 id="works-title">Contact sheet</h2>
+        <p class="mono section-head__note"><span id="roll-count">4</span> rolls &nbsp;·&nbsp; tap a frame to look closer</p>
+      </header>
+      <div class="sheet" id="sheet"></div>
+    </section>
+
+    <!-- ABOUT -->
+    <section class="about" id="about" aria-labelledby="about-title">
+      <header class="section-head">
+        <span class="mono section-head__no">02</span>
+        <h2 id="about-title">About</h2>
+      </header>
+
+      <div class="about__grid">
+        <figure class="portrait" id="portrait">
+          <div class="portrait__img"><span class="mono">Portrait<br>goes here</span></div>
+          <figcaption class="mono">XL &nbsp;·&nbsp; 0A &nbsp;·&nbsp; self, by someone else</figcaption>
+        </figure>
+
+        <div class="about__text">
+          <p class="lede">Hi, I&rsquo;m Xander. I study Film, Sound &amp; Video at Ngee Ann Poly&rsquo;s School of Film &amp; Media Studies, and I&rsquo;m happiest with a camera in my hands.</p>
+          <p>I&rsquo;ve also held the boom, dressed the set, sat in the edit and graded until the timeline stopped looking like a timeline. Knowing what every department goes through makes me better in mine, and easier to work with on set.</p>
+          <p>Outside school I shoot events for RS Photography on my own Sony FX30. I&rsquo;ve also been a Venture Scout since 2021, so yes, I turn up prepared.</p>
+          <p class="about__ask">Right now I&rsquo;m looking for an <strong>internship with a production house</strong>, ideally in the camera department.</p>
+          <a class="btn" id="cv-link" href="assets/cv/Xander-Lee-CV.pdf" download>Download CV <span aria-hidden="true">&darr;</span></a>
+        </div>
+      </div>
+
+      <div class="pipeline" aria-label="Pipeline">
+        <div class="pipeline__col">
+          <h3 class="mono">Pre</h3>
+          <ul>
+            <li>Directing <span>Forget the Club</span></li>
+            <li>Art department <span>Reunion</span></li>
+            <li>Scriptwriting</li>
+          </ul>
+        </div>
+        <div class="pipeline__col pipeline__col--main">
+          <h3 class="mono">Production</h3>
+          <ul>
+            <li>Director of Photography <span>Anya Vapa</span></li>
+            <li>Camera operation <span>events, RS Photography</span></li>
+            <li>Location sound <span>Reunion</span></li>
+          </ul>
+        </div>
+        <div class="pipeline__col">
+          <h3 class="mono">Post</h3>
+          <ul>
+            <li>Editing <span>Forget the Club, Oh Shoot!</span></li>
+            <li>Colour grading <span>Anya Vapa, Forget the Club</span></li>
+            <li>Sound design</li>
+          </ul>
+        </div>
+      </div>
+
+      <dl class="specs mono">
+        <div><dt>Kit</dt><dd>Sony FX30 (owned)</dd></div>
+        <div><dt>Software</dt><dd>DaVinci Resolve, Premiere Pro, After Effects, Audition, Pro Tools, Lightroom</dd></div>
+        <div><dt>Languages</dt><dd>English, Mandarin, Cantonese</dd></div>
+        <div><dt>Also</dt><dd>Standard First Aid (CPR + AED)</dd></div>
+      </dl>
+    </section>
+
+    <!-- CONTACT -->
+    <section class="contact" id="contact" aria-labelledby="contact-title">
+      <header class="section-head">
+        <span class="mono section-head__no">03</span>
+        <h2 id="contact-title">Contact</h2>
+      </header>
+
+      <p class="contact__intro">Got a shoot, a crew spot or an internship? I&rsquo;d love to hear about it.</p>
+
+      <button class="email" id="email" type="button" aria-describedby="email-hint">
+        <span class="email__addr">xanderlzy@gmail.com</span>
+        <span class="email__hint mono" id="email-hint">Click to copy</span>
+      </button>
+
+      <form class="form" id="form" novalidate>
+        <p class="mono form__label">Or leave a note</p>
+        <div class="form__row">
+          <label>
+            <span class="mono">Name</span>
+            <input name="name" type="text" autocomplete="name" required>
+          </label>
+          <label>
+            <span class="mono">Email</span>
+            <input name="email" type="email" autocomplete="email" required>
+          </label>
+        </div>
+        <label>
+          <span class="mono">Message</span>
+          <textarea name="message" rows="5" required></textarea>
+        </label>
+        <!-- honeypot: real people never see this -->
+        <input class="hp" type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <div class="form__foot">
+          <button class="btn" type="submit">Send <span aria-hidden="true">&rarr;</span></button>
+          <p class="form__status mono" id="form-status" role="status"></p>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <footer class="foot mono">
+    <span>&copy; <span id="year">2026</span> Xander Lee</span>
+    <span>Based in Singapore</span>
+    <a id="ig" href="https://instagram.com/kneesurgerey" target="_blank" rel="noopener">Instagram &nearr;</a>
+  </footer>
+
+  <!-- LOUPE (project view) -->
+  <dialog class="loupe" id="loupe" aria-labelledby="loupe-title">
+    <div class="loupe__inner" tabindex="-1" autofocus>
+      <header class="loupe__head">
+        <p class="mono loupe__roll" id="loupe-roll"></p>
+        <button class="loupe__close mono" id="loupe-close" type="button" aria-label="Close">Close &times;</button>
+      </header>
+      <div class="loupe__body">
+        <div class="loupe__screen" id="loupe-screen"></div>
+        <div class="loupe__info">
+          <h2 id="loupe-title"></h2>
+          <p class="loupe__blurb" id="loupe-blurb"></p>
+          <dl class="callsheet mono" id="loupe-credits"></dl>
+        </div>
+      </div>
+      <div class="loupe__frames" id="loupe-frames"></div>
     </div>
-  </section>
+  </dialog>
 
-  <section class="panel mon">
-    <div class="ptabs" style="width:100%"><span>Source: REUNION.mp4</span><span class="on">Program: Xander_Lee_Portfolio</span></div>
-    <div class="screen"><div class="frame"><video id="vid" playsinline muted preload="metadata"></video><button class="fsb" type="button" aria-label="Full screen"></button><div class="fsbar"><button class="fp" type="button" aria-label="Play or pause"></button><div class="fsp" role="slider" tabindex="0" aria-label="Playhead position" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i></i></div><span class="fst">0:00 / 0:00</span></div></div></div>
-    <div class="scrub" role="slider" tabindex="0" aria-label="Playhead position" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i></i></div>
-    <div class="ctl"><span class="tc">00:00:09:13</span><span style="font-size:12px;color:var(--dim)">Fit ▾ &nbsp; 1/2 ▾</span><span>00:00:34:01</span></div>
-    <div class="btns" role="toolbar" aria-label="Playback controls"><span aria-hidden="true">&#9662;</span><span aria-hidden="true">{</span><span aria-hidden="true">}</span><button type="button" aria-label="Previous edit"></button><button type="button" aria-label="Previous frame"></button><button type="button" aria-label="Play"></button><button type="button" aria-label="Next frame"></button><button type="button" aria-label="Next edit"></button><span aria-hidden="true">⌗</span><span aria-hidden="true">⌖</span><span aria-hidden="true">+</span></div>
-  </section>
-
-  <section class="panel">
-    <div class="ptabs"><span class="on">Controls</span><span>Color</span><span>Audio</span><span>Text</span></div>
-    <div class="props"></div>
-  </section>
-
-  <section class="tl">
-    <div class="tlh"><b>Ad_RoughCut-V1</b><span class="tc">00:00:09:13</span></div>
-    <div class="ruler"><span style="left:0">0:00</span><span style="left:20%">0:08</span><span style="left:40%">0:16</span><span style="left:60%">0:24</span><span style="left:80%">0:32</span></div>
-    <div class="tracks">
-      <div class="ph"></div>
-      <div class="tr v"><div class="hd"><em class="b">V1</em><span>Video 1</span></div><div class="lane"><div class="clip sel" style="left:0;width:100%">REUNION</div></div></div>
-      <div class="tr a"><div class="hd"><em class="b">A1</em><span>LAV</span></div><div class="lane"><div class="clip" style="left:0;width:100%"><div class="wf" data-n="200"></div></div></div></div>
-      <div class="tr s"><div class="hd"><em>A2</em><span>SFX</span></div><div class="lane"></div></div>
-      <div class="tr m"><div class="hd"><em>A3</em><span>MUSIC</span></div><div class="lane"></div></div>
-    </div>
-  </section>
-<section class="view vi">
-<aside class="pf"><figure class="pic"><img src="xander.jpg" alt="Xander Lee smiling, holding a balloon dog"><figcaption>XANDER_LEE.jpg</figcaption></figure></aside>
-<main class="ab"><h2>Xander Lee</h2><p class="role">Filmmaker &middot; Director of Photography &middot; Sound Recordist &middot; Editor</p>
-<div class="bio"><p>I&rsquo;m a filmmaker based in Singapore, currently pursuing a Diploma in Film, Sound and Video at Ngee Ann Polytechnic.</p>
-<p>I work across the camera, the sound and the edit, so I tend to think of a film as a whole: how a frame is lit, how a room sounds and how a cut lands. I&rsquo;m happiest where those disciplines meet.</p></div>
-<h4>Experience</h4>
-<div class="cards"><div class="card c1"><b>Director of Photography</b><span>Shaping the look of a film through framing, lighting and camera movement.</span></div><div class="card c2"><b>Location Sound Recordist</b><span>Capturing clean dialogue and atmosphere on set.</span></div><div class="card c3"><b>Editor</b><span>Cutting picture and sound together to find the rhythm of a story.</span></div></div>
-<h4>Education</h4>
-<div class="cards"><div class="card c0"><b>Diploma in Film, Sound and Video</b><span>School of Film and Media Studies, Ngee Ann Polytechnic &middot; Currently pursuing</span></div></div>
-</main>
-<aside><h4>Details</h4><div class="kv"><span>Based in</span><b>Singapore</b></div><div class="kv"><span>Roles</span><b>DP / Sound / Editor</b></div><div class="kv"><span>Status</span><b>Available for work</b></div>
-<h4 style="margin-top:20px">Proficient in</h4><div class="chk on">Adobe Premiere Pro</div><div class="chk on">Adobe After Effects</div><div class="chk on">Adobe Audition</div><div class="chk on">AVID Pro Tools</div><div class="chk on">DaVinci Resolve</div>
-<div class="btns2"><button class="btn" id="abc" type="button">Get in touch</button></div></aside>
-</section>
-<section class="view ve">
-<aside><div class="dest" aria-hidden="true"><span class="on">Contact</span><span>Social</span><span>Review</span></div>
-<form id="cf" onsubmit="return false"><label for="cn">Name</label><input id="cn" placeholder="Your name"><label for="ce">Email</label><input id="ce" type="email" placeholder="you@example.com"><label for="ct">Project type</label><select id="ct"><option>Short film</option><option>Commercial</option><option>Music video</option><option>Documentary</option><option>Something else</option></select><label for="cm">Brief</label><textarea id="cm" placeholder="Tell me about your project, timeline and budget."></textarea>
-<div class="btns2"><button class="btn g" type="reset">Cancel</button><button class="btn" id="ex" type="button">Submit</button></div></form></aside>
-<main class="ep"><div class="frame"><div class="safe"></div><h1>LET’S MAKE<br>SOMETHING</h1><p>Open for commissions and collaborations</p></div>
-<div class="sum"><div><b>Name</b>Xander Lee</div><div><b>Email</b><a href="mailto:xanderlzy@gmail.com">xanderlzy@gmail.com</a></div><div><b>Instagram</b><a href="https://instagram.com/xanderlzy" target="_blank" rel="noopener">@xanderlzy</a></div><div><b>Location</b>Singapore</div></div></main>
-</section>
-<nav class="mtabs" aria-label="Panels"><button type="button" data-m="info" class="on" aria-pressed="true">Info</button><button type="button" data-m="project" aria-pressed="false">Project</button></nav>
-</div>
-<div id="boot" aria-hidden="true">
-  <div class="mac">
-    <div class="mbar"><span>&#9679;</span><b>Finder</b><span aria-hidden="true">File</span><span aria-hidden="true">Edit</span><span aria-hidden="true">View</span><span>Go</span><span aria-hidden="true">Window</span><span aria-hidden="true">Help</span><span>Thu</span></div>
-    <div class="dock"><div class="dk" style="background:linear-gradient(#5ac8fa,#2d7cf6)"></div><div class="dk" style="background:linear-gradient(#7fd1ff,#1e6fe0)"></div><div class="dk" style="background:linear-gradient(#6fe38a,#1fa94b)"></div><div class="dk" style="background:linear-gradient(#ffd36b,#ff7a59)"></div><div class="dk" style="background:linear-gradient(#ff6b8a,#d6245a)"></div><div class="dk" style="background:linear-gradient(#b48cff,#6a3fd6)"></div><div class="dk" style="background:linear-gradient(#5fd0c5,#1c8f86)"></div><div class="dk adobe" id="dpr" style="color:#9999ff">XL</div><div class="dk" style="background:linear-gradient(#ccc,#888)"></div></div>
-    <svg id="cur" width="20" height="28" viewBox="0 0 12 18"><path d="M1 1v14l3.5-3.2 2.4 5.2 2-.9-2.4-5.1H11z" fill="#fff" stroke="#000" stroke-width="1"/></svg>
-  </div>
-  <div class="splash">
-    <div class="pr">XL</div><h2>Xander Lee</h2><small>Portfolio 2026</small>
-    <div class="credit">Xander Lee<br>Filmmaker, Singapore<br>&copy; 2026 All rights reserved</div>
-    <div class="sst">Starting…</div><div class="sbar"><i></i></div>
-  </div>
-</div>
-<button id="skip" type="button">Skip intro</button>
-<div id="imp"><b>Importing media</b> <em style="float:right;font-style:normal;color:var(--dim)">0 of 2</em><div><span>Preparing…</span></div><div class="bar"><i></i></div></div>
-<div id="hint" role="status">Click anywhere for sound &middot; Drag the playhead to scrub &middot; Space to pause &middot; Try the About and Contact tabs</div>
-<div id="toast" role="status" aria-live="polite"></div>
-<script src="script.js?v=8"></script>
-<script src="intro.js?v=8"></script>
+  <script src="data/works.js"></script>
+  <script src="js/main.js"></script>
 </body>
 </html>
