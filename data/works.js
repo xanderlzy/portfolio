@@ -24,7 +24,7 @@ window.SITE = {
   showreelId: "",
   // Formspree form ID (the part after formspree.io/f/). Leave empty until set up.
   formspreeId: "meaapllz",
-  cv: "assets/cv/Xander-Lee-CV.pdf",
+  cv: "assets/cv/XANDERLEE_RESUME.pdf",
   portrait: "assets/about/portrait.jpg"
 };
 
