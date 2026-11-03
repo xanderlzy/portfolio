@@ -129,11 +129,12 @@ button { font: inherit; color: inherit; }
 .hero__kicker { color: var(--red); margin: 0 0 1.25rem; }
 .hero__name {
   margin: 0;
-  font: 600 clamp(4.5rem, min(27vw, 30vh), 19rem)/.82 var(--f-head);
+  font: 600 clamp(4.5rem, min(27vw, 30vh), 19rem)/.9 var(--f-head);
   text-transform: uppercase;
   letter-spacing: -.01em;
 }
-.hero__name .ln,
+/* a column, so the intro's mask margins can't collapse and shift the lines */
+.hero__name { display: flex; flex-direction: column; }
 .hero__name .ln > span { display: block; }
 .hero__line {
   max-width: 34ch;
@@ -520,14 +521,14 @@ button { font: inherit; color: inherit; }
 
 /* rolls feed in sideways as they reach the gate; section titles rise */
 .roll.pending .roll__label { opacity: 0; transform: translateY(16px); }
-.roll.pending .strip__track { opacity: 0; transform: translateX(120px); }
+/* move the whole strip, not the film inside it, or scroll-snap fights the slide */
+.roll.pending .strip { opacity: 0; transform: translateX(96px); }
 .roll.pending .frame__no { opacity: 0; }
-.roll.pending .roll__label,
-.roll.pending .strip__track { transition: opacity .7s ease-out, transform .9s var(--ease); }
-.roll.pending .strip__track { transition-delay: .08s; }
+.roll.pending .roll__label { transition: opacity .7s ease-out, transform .9s var(--ease); }
+.roll.pending .strip { transition: opacity .8s ease-out .08s, transform .95s cubic-bezier(.16, 1, .3, 1) .08s; }
 .roll.pending .frame__no { transition: opacity .3s; transition-delay: calc(.45s + var(--i, 0) * 70ms); }
 .roll.pending.is-in .roll__label,
-.roll.pending.is-in .strip__track { opacity: 1; transform: none; }
+.roll.pending.is-in .strip { opacity: 1; transform: none; }
 .roll.pending.is-in .frame__no { opacity: .75; }
 
 .section-head.pending > * { opacity: 0; transition: opacity .6s ease-out .15s; }
