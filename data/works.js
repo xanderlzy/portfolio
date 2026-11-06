@@ -110,21 +110,27 @@ window.WORKS = [
 /*
   PRINTS: photography (section 02), shown as one stack of prints per category.
   Clicking a stack opens that category full screen.
-  To add a photo:
-    1. Put the original in assets/photos/originals/ (kept locally, not published).
-       Files are numbered in name order, so name them 01-…, 02-… for the order you want.
-    2. Run scripts/stills.sh to make web copies in assets/prints/01.jpg, 02.jpg, …
-    3. Add an entry below:
-         { src: photo(1), category: "corporate", caption: "…", client: "…", place: "…", year: 2025, kit: "A7III" }
-       `src` and `category` are needed; the rest is the caption line in the viewer.
-       `category` is one of the ids in PHOTO_CATEGORIES. Leave `client` out if you can't name them.
+  To add photos to a category:
+    1. Put the originals in assets/photos/<category>/ (kept locally, not published),
+       e.g. assets/photos/creative/. Name your 3 stack covers "Cover 1", "Cover 2",
+       "Cover 3"; they come first, then the rest in name order.
+    2. Run scripts/stills.sh to make web copies in assets/prints/<category>/01.jpg, 02.jpg, …
+    3. Below, add the category's photos with set("<category>", <count>).
+  To caption one photo (shown in the viewer), list it on its own instead:
+    { src: photo("corporate", 4), category: "corporate", caption: "…", client: "…", year: 2025, kit: "A7III" }
   Inside a category, each photo keeps its real shape, so portrait and landscape can mix.
-  Delete the placeholders once real photos are in. An empty list hides the section.
 */
 
-// "assets/prints/07.jpg" for photo(7)
-function photo(n) {
-  return "assets/prints/" + (n < 10 ? "0" : "") + n + ".jpg";
+// "assets/prints/corporate/04.jpg" for photo("corporate", 4)
+function photo(category, n) {
+  return "assets/prints/" + category + "/" + (n < 10 ? "0" : "") + n + ".jpg";
+}
+
+// every photo in a category, uncaptioned: set("corporate", 14)
+function set(category, count) {
+  var list = [];
+  for (var n = 1; n <= count; n++) list.push({ src: photo(category, n), category: category });
+  return list;
 }
 
 // One stack per category in the Prints section, in this order. The first 3 photos of each
@@ -135,18 +141,6 @@ window.PHOTO_CATEGORIES = [
   { id: "others", label: "Others" }
 ];
 
-window.PHOTOS = [
-  // placeholders (`aspect` is width / height, only needed while there is no photo)
-  { src: null, aspect: 3 / 2, category: "corporate", caption: "Placeholder" },
-  { src: null, aspect: 2 / 3, category: "creative", caption: "Placeholder" },
-  { src: null, aspect: 3 / 2, category: "others", caption: "Placeholder" },
-  { src: null, aspect: 3 / 2, category: "corporate", caption: "Placeholder" },
-  { src: null, aspect: 4 / 5, category: "creative", caption: "Placeholder" },
-  { src: null, aspect: 16 / 9, category: "others", caption: "Placeholder" },
-  { src: null, aspect: 2 / 3, category: "corporate", caption: "Placeholder" },
-  { src: null, aspect: 3 / 2, category: "creative", caption: "Placeholder" },
-  { src: null, aspect: 3 / 2, category: "others", caption: "Placeholder" },
-  { src: null, aspect: 2 / 3, category: "corporate", caption: "Placeholder" },
-  { src: null, aspect: 3 / 2, category: "creative", caption: "Placeholder" },
-  { src: null, aspect: 16 / 9, category: "others", caption: "Placeholder" }
-];
+window.PHOTOS = [].concat(
+  set("corporate", 14)
+);

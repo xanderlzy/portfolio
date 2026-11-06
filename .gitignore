@@ -2,5 +2,5 @@
 assets/works/
 .DS_Store
 /TIPPED/
-# original full-res photos for the Prints wall: published as assets/prints/
+# original full-res photos for Prints: scripts/stills.sh publishes web copies to assets/prints/
 assets/photos/

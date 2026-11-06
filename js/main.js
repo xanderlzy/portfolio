@@ -250,7 +250,7 @@
         "</span></a>"
       );
     }).join("");
-    $("#album-count").textContent = CATEGORIES.length;
+    $("#album-count").textContent = CATEGORIES.length + (CATEGORIES.length === 1 ? " set" : " sets");
     $("#prints").hidden = false;
 
     // the link changes the hash; syncWithHash opens the album

@@ -24,20 +24,25 @@ EOF
   echo "$slug: $n stills"
 done
 
-# Photography prints: assets/photos/originals/* -> assets/prints/01.jpg, 02.jpg, …
+# Photography prints, one folder per category:
+#   in:  assets/photos/<category>/*   (originals, kept locally)
+#   out: assets/prints/<category>/01.jpg, 02.jpg, …
+# Files named "Cover …" come first (they top the category's stack), then the rest in name order.
 # A little larger than film stills, since prints are viewed full screen.
-if [ -d assets/photos/originals ]; then
-  out="assets/prints"
+for dir in assets/photos/*/; do
+  [ -d "$dir" ] || continue
+  cat=$(basename "$dir")
+  out="assets/prints/$cat"
   rm -rf "$out"
   mkdir -p "$out"
   n=0
-  list=$(ls assets/photos/originals | sort -V)
+  list=$( (ls "$dir" | grep -i '^cover' | sort -V; ls "$dir" | grep -iv '^cover' | sort -V) )
   while IFS= read -r f; do
     case "$f" in .*|"") continue ;; esac
     n=$((n + 1))
-    sips -s format jpeg -s formatOptions 78 -Z 2000 "assets/photos/originals/$f" --out "$out/$(printf %02d $n).jpg" >/dev/null
+    sips -s format jpeg -s formatOptions 78 -Z 2000 "$dir$f" --out "$out/$(printf %02d $n).jpg" >/dev/null
   done <<EOT
 $list
 EOT
-  echo "prints: $n photos"
-fi
+  echo "prints/$cat: $n photos"
+done
