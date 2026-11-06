@@ -73,7 +73,7 @@ window.WORKS = [
       "This is my first short film as a director. I was responsible for the overall vision of the film, seeing it through from concept to completion. The most challenging part of this was making sure that the story was told in a way that was engaging and entertaining.",
     youtubeId: "WSkiffl-vps",
     tone: "#1f2226",
-    frames: []
+    frames: stills("forget-the-club", 7)
   },
   {
     slug: "reunion",
@@ -105,4 +105,48 @@ window.WORKS = [
     tone: "#1c2120",
     frames: stills("oh-shoot", 7)
   }
+];
+
+/*
+  PRINTS: photography (section 02), shown as one stack of prints per category.
+  Clicking a stack opens that category full screen.
+  To add a photo:
+    1. Put the original in assets/photos/originals/ (kept locally, not published).
+       Files are numbered in name order, so name them 01-…, 02-… for the order you want.
+    2. Run scripts/stills.sh to make web copies in assets/prints/01.jpg, 02.jpg, …
+    3. Add an entry below:
+         { src: photo(1), category: "corporate", caption: "…", client: "…", place: "…", year: 2025, kit: "A7III" }
+       `src` and `category` are needed; the rest is the caption line in the viewer.
+       `category` is one of the ids in PHOTO_CATEGORIES. Leave `client` out if you can't name them.
+  Inside a category, each photo keeps its real shape, so portrait and landscape can mix.
+  Delete the placeholders once real photos are in. An empty list hides the section.
+*/
+
+// "assets/prints/07.jpg" for photo(7)
+function photo(n) {
+  return "assets/prints/" + (n < 10 ? "0" : "") + n + ".jpg";
+}
+
+// One stack per category in the Prints section, in this order. The first 3 photos of each
+// category make up its stack (the first one is on top). A category with no photos is left out.
+window.PHOTO_CATEGORIES = [
+  { id: "corporate", label: "Corporate" },
+  { id: "creative", label: "Creative" },
+  { id: "others", label: "Others" }
+];
+
+window.PHOTOS = [
+  // placeholders (`aspect` is width / height, only needed while there is no photo)
+  { src: null, aspect: 3 / 2, category: "corporate", caption: "Placeholder" },
+  { src: null, aspect: 2 / 3, category: "creative", caption: "Placeholder" },
+  { src: null, aspect: 3 / 2, category: "others", caption: "Placeholder" },
+  { src: null, aspect: 3 / 2, category: "corporate", caption: "Placeholder" },
+  { src: null, aspect: 4 / 5, category: "creative", caption: "Placeholder" },
+  { src: null, aspect: 16 / 9, category: "others", caption: "Placeholder" },
+  { src: null, aspect: 2 / 3, category: "corporate", caption: "Placeholder" },
+  { src: null, aspect: 3 / 2, category: "creative", caption: "Placeholder" },
+  { src: null, aspect: 3 / 2, category: "others", caption: "Placeholder" },
+  { src: null, aspect: 2 / 3, category: "corporate", caption: "Placeholder" },
+  { src: null, aspect: 3 / 2, category: "creative", caption: "Placeholder" },
+  { src: null, aspect: 16 / 9, category: "others", caption: "Placeholder" }
 ];

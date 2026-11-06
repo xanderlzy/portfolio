@@ -254,6 +254,116 @@ button { font: inherit; color: inherit; }
   .strip__track:hover .frame:not(:hover) { opacity: .5; }
 }
 
+/* ---------- Prints: photography wall ---------- */
+/* Justified rows: every print keeps its real shape (--r = width / height);
+   flex-grow in proportion to --r keeps each row one height. */
+.prints { padding-bottom: clamp(64px, 10vw, 140px); }
+.print-wall {
+  --row: clamp(150px, 17vw, 270px);
+  --pad: clamp(5px, .6vw, 8px);
+  display: flex; flex-wrap: wrap;
+  gap: clamp(10px, 1.4vw, 18px);
+  padding: 0 var(--gutter);
+}
+/* soaks up the last row so it isn't stretched to fill the width */
+.print-wall::after { content: ""; flex: 999 1 0; }
+.print {
+  --r: 1.5;
+  /* the side borders are in the basis, so growth scales only the photo and rows stay level */
+  flex: calc(var(--r) * 100) 1 calc(var(--r) * var(--row) + 2 * var(--pad));
+  min-width: 0;
+  position: relative;
+  /* a paper border, a little deeper at the foot, like a darkroom print */
+  padding: var(--pad) var(--pad) clamp(18px, 1.8vw, 24px);
+  border: 0;
+  background: var(--ink);
+  cursor: zoom-in;
+  transition: opacity .35s ease, transform .45s var(--ease), box-shadow .45s var(--ease);
+}
+.print__img {
+  position: relative; display: block;
+  aspect-ratio: var(--r);
+  background: var(--base);
+  overflow: hidden;
+}
+.print__img img { width: 100%; height: 100%; object-fit: cover; }
+.print__no {
+  position: absolute; left: var(--pad); bottom: clamp(4px, .5vw, 7px);
+  font: 500 .625rem/1 var(--f-mono);
+  letter-spacing: .1em;
+  color: var(--red);
+  pointer-events: none;
+}
+.print:hover,
+.print:focus-visible {
+  transform: scale(1.03);
+  z-index: 1;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, .6);
+}
+@media (hover: hover) {
+  .print-wall:hover .print:not(:hover) { opacity: .5; }
+}
+
+/* the three stacks */
+.albums {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(32px, 5vw, 72px);
+  padding: 0 var(--gutter);
+}
+.album {
+  display: block;
+  color: inherit; text-decoration: none;
+  outline-offset: 12px;
+}
+.album__stack {
+  position: relative; display: block;
+  aspect-ratio: 4 / 5;
+  margin-bottom: clamp(20px, 2.4vw, 32px);
+}
+/* a print in the pile: paper border, deeper at the foot */
+.album__card {
+  position: absolute; inset: 6% 8%;
+  display: flex; flex-direction: column;
+  padding: 4% 4% 12%;
+  background: var(--ink);
+  box-shadow: 0 14px 34px rgba(0, 0, 0, .55);
+  transition: transform .6s var(--ease);
+}
+.album__card .print__img { flex: 1; aspect-ratio: auto; }
+/* cards are in the DOM bottom-first; the last one is the cover */
+.album__card:nth-last-child(3) { transform: rotate(-7deg) translate(-5%, 2%); }
+.album__card:nth-last-child(2) { transform: rotate(5deg) translate(5%, 1%); }
+.album__card:nth-last-child(1) { transform: rotate(-1deg); }
+/* fan the pile out, like spreading prints on a table */
+.album:hover .album__card:nth-last-child(3),
+.album:focus-visible .album__card:nth-last-child(3) { transform: rotate(-13deg) translate(-16%, 3%); }
+.album:hover .album__card:nth-last-child(2),
+.album:focus-visible .album__card:nth-last-child(2) { transform: rotate(11deg) translate(16%, 0); }
+.album:hover .album__card:nth-last-child(1),
+.album:focus-visible .album__card:nth-last-child(1) { transform: rotate(0) translateY(-4%); }
+.album__label {
+  display: flex; justify-content: space-between; align-items: baseline; gap: 12px;
+  border-top: 1px solid var(--line);
+  padding-top: 12px;
+}
+.album__title {
+  font: 500 clamp(1.75rem, 3vw, 2.5rem)/1 var(--f-head);
+  text-transform: uppercase;
+  transition: color .2s;
+}
+.album__count { color: var(--muted); white-space: nowrap; }
+.album:hover .album__title,
+.album:focus-visible .album__title { color: var(--red); }
+
+/* album view: one category, full screen (also a .loupe) */
+.album-view__title {
+  margin: 0 0 clamp(24px, 4vw, 48px);
+  font: 500 clamp(2.5rem, 7vw, 5.5rem)/1 var(--f-head);
+  text-transform: uppercase;
+}
+.album-view__wall { padding: 0; }
+
 /* ---------- About ---------- */
 .about { padding-bottom: clamp(64px, 10vw, 140px); }
 .about__grid {
@@ -481,6 +591,52 @@ button { font: inherit; color: inherit; }
   color: rgba(236, 230, 220, .45);
 }
 
+/* ---------- Enlarger (one print, full size); also a .loupe ---------- */
+.enlarger__inner {
+  display: flex; flex-direction: column;
+  height: 100dvh;
+  padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+}
+.enlarger .loupe__head { margin-bottom: 16px; }
+.enlarger__fig {
+  flex: 1; min-height: 0;
+  display: flex; flex-direction: column;
+  margin: 0;
+}
+.enlarger__easel {
+  flex: 1; min-height: 0;
+  display: grid; place-items: center;
+  touch-action: pan-y;
+  user-select: none;
+}
+.enlarger__easel img {
+  max-width: 100%;
+  max-height: calc(100dvh - 160px);
+  object-fit: contain;
+  -webkit-user-drag: none;
+}
+.enlarger__ph {
+  display: grid; place-items: center;
+  aspect-ratio: var(--r);
+  width: min(100%, calc((100dvh - 160px) * var(--r)));
+  background: var(--base);
+  color: rgba(236, 230, 220, .28);
+  font-size: .625rem;
+}
+.enlarger__foot {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center; gap: 16px;
+  padding-top: 16px;
+}
+.enlarger__cap { margin: 0; text-align: center; color: var(--muted); }
+.enlarger__nav {
+  background: none; border: 1px solid var(--line);
+  padding: 8px 14px; cursor: pointer;
+  transition: border-color .2s;
+}
+.enlarger__nav:hover { border-color: var(--ink); }
+
 /* ---------- Motion (html.motion is set in <head> unless reduced motion is on) ---------- */
 @keyframes fade-in { from { opacity: 0; } }
 @keyframes fade-out { to { opacity: 0; } }
@@ -531,6 +687,12 @@ button { font: inherit; color: inherit; }
 .roll.pending.is-in .strip { opacity: 1; transform: none; }
 .roll.pending.is-in .frame__no { opacity: .75; }
 
+/* stacks rise into place as they come into view; an album's prints rise when it opens */
+.album.pending { opacity: 0; }
+.album.pending.is-in { opacity: 1; animation: print-in .9s var(--ease) var(--d, 0ms) backwards; }
+.album-view[open] .print { animation: print-in .7s var(--ease) calc(.15s + var(--d, 0ms)) backwards; }
+@keyframes print-in { from { opacity: 0; transform: translateY(28px); } }
+
 .section-head.pending > * { opacity: 0; transition: opacity .6s ease-out .15s; }
 .section-head.pending h2 {
   transform: translateY(.35em);
@@ -568,6 +730,10 @@ button { font: inherit; color: inherit; }
   .specs { grid-template-columns: 1fr; }
   .form__row { grid-template-columns: 1fr; gap: 0; }
   .loupe__body { grid-template-columns: 1fr; }
+  .print-wall { --row: 38vw; }
+  .albums { grid-template-columns: 1fr; max-width: 290px; margin: 0 auto; gap: 40px; }
+  .enlarger__foot { grid-template-columns: 1fr 1fr; }
+  .enlarger__cap { grid-column: 1 / -1; grid-row: 1; }
 }
 
 @media (prefers-reduced-motion: reduce) {

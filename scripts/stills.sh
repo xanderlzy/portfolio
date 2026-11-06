@@ -1,5 +1,5 @@
 #!/bin/sh
-# Make web-sized copies of every film's stills.
+# Make web-sized copies of every film's stills, and of the photography prints.
 #   in:  assets/works/<slug>/frames/*   (originals, any image format, kept locally)
 #   out: assets/stills/<slug>/01.jpg, 02.jpg, …   (what the site loads)
 # Files are numbered in natural name order (R2 before R10). Uses macOS `sips`.
@@ -23,3 +23,21 @@ $list
 EOF
   echo "$slug: $n stills"
 done
+
+# Photography prints: assets/photos/originals/* -> assets/prints/01.jpg, 02.jpg, …
+# A little larger than film stills, since prints are viewed full screen.
+if [ -d assets/photos/originals ]; then
+  out="assets/prints"
+  rm -rf "$out"
+  mkdir -p "$out"
+  n=0
+  list=$(ls assets/photos/originals | sort -V)
+  while IFS= read -r f; do
+    case "$f" in .*|"") continue ;; esac
+    n=$((n + 1))
+    sips -s format jpeg -s formatOptions 78 -Z 2000 "assets/photos/originals/$f" --out "$out/$(printf %02d $n).jpg" >/dev/null
+  done <<EOT
+$list
+EOT
+  echo "prints: $n photos"
+fi

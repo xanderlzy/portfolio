@@ -2,3 +2,5 @@
 assets/works/
 .DS_Store
 /TIPPED/
+# original full-res photos for the Prints wall: published as assets/prints/
+assets/photos/

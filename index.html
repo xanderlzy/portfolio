@@ -32,6 +32,7 @@
     <span class="bar__tc mono" aria-hidden="true"><span class="bar__slate" id="slate">Sc 00 &middot; Titles</span><span id="timecode">00:00:00:00</span></span>
     <nav class="bar__nav" aria-label="Main">
       <a href="#works">Works</a>
+      <a href="#prints">Prints</a>
       <a href="#about">About</a>
       <a href="#contact">Contact</a>
     </nav>
@@ -72,10 +73,20 @@
       <div class="sheet" id="sheet"></div>
     </section>
 
+    <!-- PRINTS (photography; hidden while PHOTOS is empty) -->
+    <section class="prints" id="prints" hidden aria-labelledby="prints-title">
+      <header class="section-head">
+        <span class="mono section-head__no">02</span>
+        <h2 id="prints-title">Prints</h2>
+        <p class="mono section-head__note"><span id="album-count">3</span> sets &nbsp;·&nbsp; pick a stack</p>
+      </header>
+      <div class="albums" id="albums"></div>
+    </section>
+
     <!-- ABOUT -->
     <section class="about" id="about" aria-labelledby="about-title">
       <header class="section-head">
-        <span class="mono section-head__no">02</span>
+        <span class="mono section-head__no">03</span>
         <h2 id="about-title">About</h2>
       </header>
 
@@ -132,7 +143,7 @@
     <!-- CONTACT -->
     <section class="contact" id="contact" aria-labelledby="contact-title">
       <header class="section-head">
-        <span class="mono section-head__no">03</span>
+        <span class="mono section-head__no">04</span>
         <h2 id="contact-title">Contact</h2>
       </header>
 
@@ -198,6 +209,36 @@
         </div>
       </div>
       <div class="loupe__frames" id="loupe-frames"></div>
+    </div>
+  </dialog>
+
+  <!-- ALBUM (one photo category, full screen) -->
+  <dialog class="loupe album-view" id="album" aria-labelledby="album-title">
+    <div class="loupe__inner" tabindex="-1" autofocus>
+      <header class="loupe__head">
+        <p class="mono loupe__roll" id="album-roll"></p>
+        <button class="loupe__close mono" id="album-close" type="button" aria-label="Close">Close &times;</button>
+      </header>
+      <h2 class="album-view__title" id="album-title"></h2>
+      <div class="print-wall album-view__wall" id="album-wall"></div>
+    </div>
+  </dialog>
+
+  <!-- ENLARGER (one print, full size) -->
+  <dialog class="loupe enlarger" id="enlarger" aria-label="Photo viewer">
+    <div class="loupe__inner enlarger__inner" tabindex="-1" autofocus>
+      <header class="loupe__head">
+        <p class="mono loupe__roll" id="enl-count"></p>
+        <button class="loupe__close mono" id="enl-close" type="button" aria-label="Close">Close &times;</button>
+      </header>
+      <figure class="enlarger__fig">
+        <div class="enlarger__easel" id="enl-easel"></div>
+        <figcaption class="enlarger__foot">
+          <button class="enlarger__nav mono" id="enl-prev" type="button" aria-label="Previous photo">&larr; Prev</button>
+          <p class="enlarger__cap mono" id="enl-cap" aria-live="polite"></p>
+          <button class="enlarger__nav mono" id="enl-next" type="button" aria-label="Next photo">Next &rarr;</button>
+        </figcaption>
+      </figure>
     </div>
   </dialog>
 

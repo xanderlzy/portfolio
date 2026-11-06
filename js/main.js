@@ -3,6 +3,7 @@
 
   var SITE = window.SITE || {};
   var WORKS = window.WORKS || [];
+  var PHOTOS = window.PHOTOS || [];
   var PLACEHOLDER_FRAMES = 6;
   // set in <head>; off when the visitor prefers reduced motion
   var MOTION = document.documentElement.classList.contains("motion");
@@ -97,19 +98,21 @@
     return r.bottom > 0 && r.top < window.innerHeight && r.right > 0 && r.left < window.innerWidth;
   }
 
-  // the trigger's image, if the trigger is a loaded still we can fly
+  // the trigger's image, if the trigger is a loaded still (or print) we can fly
   function flyable(trigger) {
-    if (!MOTION || !trigger || !trigger.classList.contains("frame") || !Element.prototype.animate) return null;
+    if (!MOTION || !trigger || !Element.prototype.animate) return null;
+    if (!trigger.classList.contains("frame") && !trigger.classList.contains("print")) return null;
     var img = trigger.querySelector("img");
     return img && img.complete && img.naturalWidth && inView(trigger) ? img : null;
   }
 
-  function fly(still, from, to, done) {
+  // `host` is the open dialog the flying copy sits in (dialogs live in the top layer)
+  function fly(host, still, from, to, done) {
     var img = document.createElement("img");
     img.className = "loupe__fly";
     img.alt = "";
     img.src = still.currentSrc || still.src;
-    loupe.appendChild(img);
+    host.appendChild(img);
     img.animate([from, to], { duration: FLY_MS, easing: "cubic-bezier(.2, .7, .1, 1)", fill: "forwards" })
       .onfinish = function () { done(img); };
   }
@@ -146,7 +149,7 @@
     if (opening) loupe.showModal();
     loupe.scrollTop = 0;
     if (still) {
-      fly(still, from, box($("#loupe-screen")), function (img) {
+      fly(loupe, still, from, box($("#loupe-screen")), function (img) {
         img.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 250, fill: "forwards" })
           .onfinish = function () { img.remove(); };
       });
@@ -162,7 +165,7 @@
     if (!still || !inView(screen)) { loupe.close(); return; }
     closing = true;
     loupe.classList.add("is-leaving");
-    fly(still, box(screen), box(lastTrigger), function (img) {
+    fly(loupe, still, box(screen), box(lastTrigger), function (img) {
       loupe.close();
       img.remove();
       closing = false;
@@ -183,14 +186,254 @@
   });
   $("#loupe-close").addEventListener("click", close);
 
-  function syncWithHash() {
-    var slug = location.hash.slice(1);
-    if (find(slug)) {
-      var roll = document.getElementById("roll-" + slug);
-      open(slug, roll && roll.querySelector(".roll__title"));
-    } else {
-      close();
+  /* ---------- Prints: three category stacks -> album view -> enlarger ---------- */
+  var album = $("#album");
+  var enlarger = $("#enlarger");
+  var albumCat = "";     // category open in the album view
+  var printAt = -1;      // which print the enlarger shows
+
+  var attr = function (s) {
+    return String(s).replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
+  };
+  function printHash(i) { return "#print-" + pad(i + 1); }
+  function printIndex(hash) {
+    var m = /^print-(\d+)$/.exec(hash);
+    var i = m ? parseInt(m[1], 10) - 1 : -1;
+    return i >= 0 && i < PHOTOS.length && categoryLabel(PHOTOS[i].category) ? i : -1;
+  }
+  function printTile(i) { return $('#album-wall [data-i="' + i + '"]'); }
+  function printCaption(p) {
+    return [p.caption, p.client, p.place, p.year, p.kit].filter(Boolean).join(" · ");
+  }
+  function printFace(p, i) {
+    return p.src
+      ? '<img src="' + attr(p.src) + '" alt="" loading="lazy" decoding="async">'
+      : '<span class="frame__ph mono">Placeholder &middot; ' + pad(i + 1) + "</span>";
+  }
+
+  // only categories that have photos are shown
+  var CATEGORIES = (window.PHOTO_CATEGORIES || []).filter(function (c) {
+    return PHOTOS.some(function (p) { return p.category === c.id; });
+  });
+  function categoryLabel(id) {
+    for (var i = 0; i < CATEGORIES.length; i++) if (CATEGORIES[i].id === id) return CATEGORIES[i].label;
+    return "";
+  }
+  // indices of the photos in a category, in order
+  function inCategory(id) {
+    var list = [];
+    for (var i = 0; i < PHOTOS.length; i++) if (PHOTOS[i].category === id) list.push(i);
+    return list;
+  }
+  // "prints/corporate" -> "corporate", "prints" -> "", anything else -> null
+  function categoryFromHash(hash) {
+    if (hash === "prints") return "";
+    var m = /^prints\/([\w-]+)$/.exec(hash);
+    return m && categoryLabel(m[1]) ? m[1] : null;
+  }
+
+  /* The section: one stack of up to three prints per category */
+  function renderPrints() {
+    if (!CATEGORIES.length) return;
+    $("#albums").innerHTML = CATEGORIES.map(function (c, k) {
+      var list = inCategory(c.id);
+      // the first photo ends up on top of the pile
+      var cards = list.slice(0, 3).reverse().map(function (i) {
+        return '<span class="album__card"><span class="print__img">' + printFace(PHOTOS[i], i) + "</span></span>";
+      }).join("");
+      return (
+        '<a class="album" href="#prints/' + c.id + '" data-cat="' + c.id + '" style="--d:' + k * 120 + 'ms;--n:' + Math.min(list.length, 3) + '">' +
+        '<span class="album__stack" aria-hidden="true">' + cards + "</span>" +
+        '<span class="album__label">' +
+        '<span class="album__title">' + attr(c.label) + "</span>" +
+        '<span class="album__count mono">' + pad(list.length) + (list.length === 1 ? " frame" : " frames") + " &rarr;</span>" +
+        "</span></a>"
+      );
+    }).join("");
+    $("#album-count").textContent = CATEGORIES.length;
+    $("#prints").hidden = false;
+
+    // the link changes the hash; syncWithHash opens the album
+    $("#albums").addEventListener("click", function (e) {
+      var a = e.target.closest(".album");
+      if (!a) return;
+      e.preventDefault();
+      history.pushState(null, "", "#prints/" + a.dataset.cat);
+      openAlbum(a.dataset.cat);
+    });
+
+    var wall = $("#album-wall");
+    // keep each photo's real shape once it loads
+    wall.addEventListener("load", function (e) {
+      var img = e.target;
+      if (img.tagName === "IMG" && img.naturalWidth) {
+        img.closest(".print").style.setProperty("--r", (img.naturalWidth / img.naturalHeight).toFixed(4));
+      }
+    }, true);
+    wall.addEventListener("click", function (e) {
+      var tile = e.target.closest(".print");
+      if (tile) openPrint(Number(tile.dataset.i), tile);
+    });
+  }
+
+  /* Album view: one category, full screen */
+  function openAlbum(id) {
+    if (album.open && albumCat === id) return;
+    albumCat = id;
+    var list = inCategory(id);
+    $("#album-roll").textContent = "Prints · " + pad(list.length) + (list.length === 1 ? " frame" : " frames");
+    $("#album-title").textContent = categoryLabel(id);
+    $("#album-wall").innerHTML = list.map(function (i, n) {
+      var p = PHOTOS[i];
+      var label = (printCaption(p) || "Photograph") + ", enlarge";
+      return (
+        '<button class="print" type="button" data-i="' + i + '" ' +
+        'style="--r:' + (p.aspect || 1.5) + ";--d:" + Math.min(n, 8) * 50 + 'ms" aria-label="' + attr(label) + '">' +
+        '<span class="print__img">' + printFace(p, i) + "</span>" +
+        '<span class="print__no mono">' + pad(n + 1) + "</span>" +
+        "</button>"
+      );
+    }).join("");
+    if (!album.open) album.showModal();
+    album.scrollTop = 0;
+  }
+
+  function closeAlbum() {
+    if (album.open) album.close();
+  }
+
+  album.addEventListener("close", function () {
+    if (categoryFromHash(location.hash.slice(1))) history.replaceState(null, "", "#prints");
+    var stack = $('#albums [data-cat="' + albumCat + '"]');
+    if (stack) stack.focus({ preventScroll: true });
+    albumCat = "";
+  });
+  $("#album-close").addEventListener("click", closeAlbum);
+
+  /* Enlarger: one print, on top of the album */
+  function showPrint(i) {
+    printAt = i;
+    var p = PHOTOS[i];
+    var cap = printCaption(p);
+    var list = inCategory(p.category);
+    $("#enl-count").textContent = categoryLabel(p.category) + " " + pad(list.indexOf(i) + 1) + " / " + pad(list.length);
+    $("#enl-cap").textContent = cap;
+    $("#enl-easel").innerHTML = p.src
+      ? '<img src="' + attr(p.src) + '" alt="' + attr(cap || "Photograph " + (i + 1)) + '" decoding="async">'
+      : '<span class="enlarger__ph mono" style="--r:' + (p.aspect || 1.5) + '">Placeholder &middot; ' + pad(i + 1) + "</span>";
+  }
+
+  function openPrint(i, trigger) {
+    if (enlarger.open) {
+      if (i !== printAt) goTo(i);
+      return;
     }
+    var still = flyable(trigger);
+    var from = still && box(still);
+    showPrint(i);
+    enlarger.classList.toggle("is-flying", !!still);
+    enlarger.showModal();
+    var img = $("#enl-easel img");
+    if (still && img && img.complete && img.naturalWidth) {
+      fly(enlarger, still, from, box(img), function (f) {
+        f.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 250, fill: "forwards" })
+          .onfinish = function () { f.remove(); };
+      });
+    } else {
+      enlarger.classList.remove("is-flying");
+    }
+    if (location.hash !== printHash(i)) history.pushState(null, "", printHash(i));
+  }
+
+  // swap the print, keeping one history entry for the whole visit
+  function goTo(i) {
+    showPrint(i);
+    history.replaceState(null, "", printHash(i));
+  }
+  // prev / next stay inside the category
+  function stepBy(d) {
+    var list = inCategory(PHOTOS[printAt].category);
+    var pos = list.indexOf(printAt);
+    goTo(list[(pos + d + list.length) % list.length]);
+  }
+
+  var printClosing = false;
+  function closePrint() {
+    if (!enlarger.open || printClosing) return;
+    var tile = printTile(printAt);
+    // after browsing ahead, bring the print you ended on back into view
+    if (tile && !inView(tile)) tile.scrollIntoView({ block: "center", behavior: "instant" });
+    var still = flyable(tile);
+    var img = $("#enl-easel img");
+    if (!still || !img || !img.naturalWidth || !inView(img)) { enlarger.close(); return; }
+    printClosing = true;
+    enlarger.classList.add("is-leaving");
+    img.style.visibility = "hidden";
+    fly(enlarger, img, box(img), box(still), function (f) {
+      enlarger.close();
+      f.remove();
+      printClosing = false;
+    });
+  }
+
+  enlarger.addEventListener("cancel", function (e) {
+    e.preventDefault();
+    closePrint();
+  });
+  enlarger.addEventListener("close", function () {
+    enlarger.classList.remove("is-flying", "is-leaving");
+    if (printIndex(location.hash.slice(1)) >= 0) {
+      history.replaceState(null, "", albumCat ? "#prints/" + albumCat : "#prints");
+    }
+    var tile = printTile(printAt);
+    if (tile) tile.focus({ preventScroll: true });
+    printAt = -1;
+  });
+  $("#enl-close").addEventListener("click", closePrint);
+  $("#enl-prev").addEventListener("click", function () { stepBy(-1); });
+  $("#enl-next").addEventListener("click", function () { stepBy(1); });
+  enlarger.addEventListener("keydown", function (e) {
+    if (e.key === "ArrowLeft") { e.preventDefault(); stepBy(-1); }
+    if (e.key === "ArrowRight") { e.preventDefault(); stepBy(1); }
+  });
+
+  // swipe left / right on the photo
+  var swipe = null;
+  $("#enl-easel").addEventListener("pointerdown", function (e) { swipe = { x: e.clientX, y: e.clientY }; });
+  $("#enl-easel").addEventListener("pointerup", function (e) {
+    if (!swipe) return;
+    var dx = e.clientX - swipe.x, dy = e.clientY - swipe.y;
+    swipe = null;
+    if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) stepBy(dx < 0 ? 1 : -1);
+  });
+  $("#enl-easel").addEventListener("pointercancel", function () { swipe = null; });
+
+  function syncWithHash() {
+    var hash = location.hash.slice(1);
+    var p = printIndex(hash);
+    var cat = CATEGORIES.length ? categoryFromHash(hash) : null;
+    var wasInPrints = album.open;
+    if (find(hash)) {
+      closePrint();
+      closeAlbum();
+      var roll = document.getElementById("roll-" + hash);
+      open(hash, roll && roll.querySelector(".roll__title"));
+      return;
+    }
+    close();
+    if (p >= 0) {
+      // a link to one photo: open its category underneath, so closing lands there
+      openAlbum(PHOTOS[p].category);
+      openPrint(p, printTile(p));
+    } else if (cat) {
+      closePrint();
+      openAlbum(cat);
+    } else {
+      closePrint();
+      closeAlbum();
+    }
+    // arriving from a link: put the stacks behind the album, so closing it lands on them
+    if ((p >= 0 || cat) && !wasInPrints) $("#prints").scrollIntoView({ behavior: "instant" });
   }
   window.addEventListener("popstate", syncWithHash);
   window.addEventListener("hashchange", syncWithHash);
@@ -218,7 +461,7 @@
   /* ---------- Slate: which scene you're in ---------- */
   function initSlate() {
     var slate = $("#slate");
-    var scenes = [[".hero", "00", "Titles"], ["#works", "01", "Works"], ["#about", "02", "About"], ["#contact", "03", "Contact"]];
+    var scenes = [[".hero", "00", "Titles"], ["#works", "01", "Works"], ["#prints", "02", "Prints"], ["#about", "03", "About"], ["#contact", "04", "Contact"]];
     if (!("IntersectionObserver" in window)) return;
 
     function show(scene) {
@@ -258,7 +501,7 @@
         io.unobserve(entry.target);
       });
     }, { rootMargin: "0px 0px -12% 0px" });
-    document.querySelectorAll(".roll, .section-head").forEach(function (el) {
+    document.querySelectorAll(".roll, .section-head, .album").forEach(function (el) {
       el.classList.add("pending");
       io.observe(el);
     });
@@ -354,6 +597,7 @@
   }
 
   renderSheet();
+  renderPrints();
   initTitles();
   initReveals();
   initScroll();
